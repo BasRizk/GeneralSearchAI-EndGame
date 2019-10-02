@@ -41,7 +41,47 @@ public class Main {
 		– nodes is the number of nodes chosen for expansion during the search.
 		If the problem has no solution, the string There is no solution. should be returned.
 	 */
-	public static String solve(String grid, String strategy, String visualize) {
-		return null;
+	public static String solve(String grid, String strategy, boolean visualize) {
+		int gridWidth, gridHeight; int iX, iY; int tX, tY;
+		int [] sI = new int[12];
+		int [] wI = new int[10];
+		
+		String [] lines = grid.split(";");
+		String [] line;
+		line = lines[0].split(",");
+		gridWidth = Integer.parseInt(line[0]);
+		gridHeight = Integer.parseInt(line[1]);
+		line = lines[1].split(",");
+		iX = Integer.parseInt(line[0]);
+		iY = Integer.parseInt(line[1]);
+		tX = Integer.parseInt(line[0]);
+		tY = Integer.parseInt(line[1]);
+		
+		line = lines[2].split(",");
+		for(int i = 0; i < line.length; i ++) {
+			sI[i] = Integer.parseInt(line[i]);
+		}
+		
+		line = lines[3].split(",");
+		for(int i = 0; i < line.length; i ++) {
+			wI[i] = Integer.parseInt(line[i]);
+		}
+			
+		switch(strategy) {
+		case "BF":
+		case "DF":
+		case "ID":
+		case "UC":
+		case "GR":
+		case "AS":
+		default: break;
+		}
+		
+		if(visualize) {
+			// TODO
+			return "Show some effects";
+		}
+		
+		return "plan;cost;node";
 	}
 }
