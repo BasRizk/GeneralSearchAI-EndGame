@@ -55,15 +55,18 @@ public class Main {
 		iX = Integer.parseInt(line[0]);
 		iY = Integer.parseInt(line[1]);
 		line = lines[2].split(",");
+		String[] thanosPos = line;
 		tX = Integer.parseInt(line[0]);
 		tY = Integer.parseInt(line[1]);
 		
 		line = lines[3].split(",");
+		String [] stonesPos = line;
 		for(int i = 0; i < line.length; i ++) {
 			sI[i] = Integer.parseInt(line[i]);
 		}
 		
 		line = lines[4].split(",");
+		String [] worriorsPos = line;
 		for(int i = 0; i < line.length; i ++) {
 			wI[i] = Integer.parseInt(line[i]);
 		}
@@ -72,8 +75,6 @@ public class Main {
 		// Initializations
 		// TODO, VERY TRIVIAL NOW, JUST TAKING INIT POS OF IRON MAN,
 		// HOWEVER, ACCORDING TO THE PROBLEM, STATE IS DEFINED
-		EndGame endGameProblem = new EndGame();
-
 		String state; Node parentNode;
 		int depth; int pathCost;
 
@@ -84,7 +85,8 @@ public class Main {
 
 		
 		Node initState = new Node(state, parentNode, null, depth, pathCost);		
-		endGameProblem.initialState = initState;
+		EndGame endGameProblem = new EndGame(initState, gridWidth, gridHeight,
+											worriorsPos, stonesPos, thanosPos);
 		
 		return GeneralSearchProblem.search(endGameProblem, strategy, visualize);
 	}

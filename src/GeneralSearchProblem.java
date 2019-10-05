@@ -7,7 +7,16 @@ abstract class GeneralSearchProblem {
 	Node [] stateSpace;
 	
 	public abstract boolean goalTest(Node n);
-	public abstract void pathCost();
+	//public abstract void pathCost();
+	public abstract Node applyOperator(String operator);
+	
+	public GeneralSearchProblem(Node initialState) {
+		this.initialState = initialState;
+	}
+	
+	public void setOperators(String [] operators) {
+		this.operators = operators;
+	}
 	
 	public static String search(GeneralSearchProblem problem, String strategy, boolean verbose) {
 		// TODO maybe move Main search algorithm stuff here instead
