@@ -42,8 +42,8 @@ public class Main {
 		
 		// Parsing Grid Input
 		int gridWidth, gridHeight; int iX, iY; int tX, tY;
-		int [] sI = new int[12];
-		int [] wI = new int[10];
+		int [] stonesPos = new int[12];
+		int [] warriorsPos = new int[10];
 		
 		String [] lines = grid.split(";");
 		String [] line;
@@ -52,41 +52,30 @@ public class Main {
 		gridHeight = Integer.parseInt(line[1]);
 		line = lines[1].split(",");
 		String dimens = lines[1];
-		iX = Integer.parseInt(line[0]);
-		iY = Integer.parseInt(line[1]);
+		int[] ironmanPos = new int[2]; 
+		ironmanPos[0] = Integer.parseInt(line[0]);
+		ironmanPos[1] = Integer.parseInt(line[1]);
 		line = lines[2].split(",");
-		String[] thanosPos = line;
-		tX = Integer.parseInt(line[0]);
-		tY = Integer.parseInt(line[1]);
+		int[] thanosPos = new int[2];
+		thanosPos[0] = Integer.parseInt(line[0]);
+		thanosPos[1] = Integer.parseInt(line[1]);
 		
 		line = lines[3].split(",");
-		String [] stonesPos = line;
 		for(int i = 0; i < line.length; i ++) {
-			sI[i] = Integer.parseInt(line[i]);
+			stonesPos[i] = Integer.parseInt(line[i]);
 		}
 		
 		line = lines[4].split(",");
-		String [] worriorsPos = line;
 		for(int i = 0; i < line.length; i ++) {
-			wI[i] = Integer.parseInt(line[i]);
+			warriorsPos[i] = Integer.parseInt(line[i]);
 		}
 		
 		
 		// Initializations
 		// TODO, VERY TRIVIAL NOW, JUST TAKING INIT POS OF IRON MAN,
 		// HOWEVER, ACCORDING TO THE PROBLEM, STATE IS DEFINED
-		String state; Node parentNode;
-		int depth; int pathCost;
-
-		state = dimens;
-		parentNode = null;
-		depth = 1;
-		pathCost = 0;
-
-		
-		Node initState = new Node(state, parentNode, null, depth, pathCost);		
-		EndGame endGameProblem = new EndGame(initState, gridWidth, gridHeight,
-											worriorsPos, stonesPos, thanosPos);
+		EndGame endGameProblem = new EndGame(ironmanPos, gridWidth, gridHeight,
+											warriorsPos, stonesPos, thanosPos);
 		
 		return GeneralSearchProblem.search(endGameProblem, strategy, visualize);
 	}

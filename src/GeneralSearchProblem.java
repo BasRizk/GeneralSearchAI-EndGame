@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 abstract class GeneralSearchProblem {
@@ -8,7 +9,8 @@ abstract class GeneralSearchProblem {
 	
 	public abstract boolean goalTest(Node n);
 	//public abstract void pathCost();
-	public abstract Node applyOperator(String operator);
+	//public abstract Node applyOperator(Node node, String operator);
+	public abstract ArrayList<Node> expandNode(Node n);
 	
 	public GeneralSearchProblem(Node initialState) {
 		this.initialState = initialState;
@@ -27,6 +29,8 @@ abstract class GeneralSearchProblem {
 		
 		boolean success = false;
 		Node currentNode;
+		ArrayList<Node> expandedNodes;
+
 		while(true) {
 				
 			if(nodesSearchQueue.isEmpty()) {
@@ -44,9 +48,12 @@ abstract class GeneralSearchProblem {
 			
 			// TODO according to strategy expand the currentNode, and
 			// enqueue the resulted nodes in the according order. 
+			expandedNodes = problem.expandNode(currentNode);
+
 			switch(strategy) {
 			
 			case "BF":
+				
 				
 			case "DF":
 			

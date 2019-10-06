@@ -1,14 +1,16 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Node {
 
-	String state;
-	Node parentNode;
-	String operator;
-	int depth;
-	int pathCost;
+	private HashMap<String, ?> state;
+	private Node parentNode;
+
+	private String operator;
+	private int depth;
+	private int pathCost;
 	
-	public Node(String state, Node parentNode, String operator, int depth, int pathCost) {
+	public Node(HashMap<String, ?> state, Node parentNode, String operator, int depth, int pathCost) {
 		this.state = state;
 		this.parentNode = parentNode;
 		this.operator = operator;
@@ -29,10 +31,24 @@ public class Node {
 		plan.add(node);
 		return  getPlanRec(plan, node.parentNode);
 	}
-	
-	public Node applyOperator() {
-		// TODO maybe moved to the endgame class
-		return null;
+
+	public HashMap<String, ?> getState() {
+		return state;
 	}
 
+	public Node getParentNode() {
+		return parentNode;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public int getPathCost() {
+		return pathCost;
+	}
 }
