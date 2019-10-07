@@ -8,8 +8,6 @@ abstract class GeneralSearchProblem {
 	Node [] stateSpace;
 	
 	public abstract boolean goalTest(Node n);
-	//public abstract void pathCost();
-	//public abstract Node applyOperator(Node node, String operator);
 	public abstract ArrayList<Node> expandNode(Node n);
 	
 	public GeneralSearchProblem(Node initialState) {
@@ -21,7 +19,6 @@ abstract class GeneralSearchProblem {
 	}
 	
 	public static String search(GeneralSearchProblem problem, String strategy, boolean verbose) {
-		// TODO maybe move Main search algorithm stuff here instead
 		
 		LinkedList<Node> nodesSearchQueue = new LinkedList<Node>();
 		Node initState = problem.initialState;

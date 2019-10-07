@@ -2,9 +2,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EndGame extends GeneralSearchProblem {
-
-//	HashMap<String, Boolean> worriorsKilled;
-//	HashMap<String, Boolean> stonesCollected;
 	
 	int [] worriorsPos;
 	int [] stonesPos;
