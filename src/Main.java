@@ -1,7 +1,7 @@
 public class Main {
 
 	/**
-	 * TODO 1 uses search to try to formulate a winning plan:
+	 * Search to try to formulate a winning plan:
 	 * 
 	 * @param grid, a string representing the grid to perform the search on:
 	 *
@@ -41,7 +41,7 @@ public class Main {
 	public static String solve(String grid, String strategy, boolean visualize) {
 		
 		// Parsing Grid Input
-		int gridWidth, gridHeight; int iX, iY; int tX, tY;
+		int gridWidth, gridHeight; int [] ironmanPos; int [] thanosPos;
 		int [] stonesPos = new int[12];
 		int [] warriorsPos = new int[10];
 		
@@ -51,12 +51,11 @@ public class Main {
 		gridWidth = Integer.parseInt(line[0]);
 		gridHeight = Integer.parseInt(line[1]);
 		line = lines[1].split(",");
-		String dimens = lines[1];
-		int[] ironmanPos = new int[2]; 
+		ironmanPos = new int[2]; 
 		ironmanPos[0] = Integer.parseInt(line[0]);
 		ironmanPos[1] = Integer.parseInt(line[1]);
 		line = lines[2].split(",");
-		int[] thanosPos = new int[2];
+		thanosPos = new int[2];
 		thanosPos[0] = Integer.parseInt(line[0]);
 		thanosPos[1] = Integer.parseInt(line[1]);
 		
@@ -72,8 +71,6 @@ public class Main {
 		
 		
 		// Initializations
-		// TODO, VERY TRIVIAL NOW, JUST TAKING INIT POS OF IRON MAN,
-		// HOWEVER, ACCORDING TO THE PROBLEM, STATE IS DEFINED
 		EndGame endGameProblem = new EndGame(ironmanPos, gridWidth, gridHeight,
 											warriorsPos, stonesPos, thanosPos);
 		
