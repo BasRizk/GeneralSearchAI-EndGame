@@ -151,11 +151,9 @@ public class EndGame extends GeneralSearchProblem {
 			newNode = applyOperator(node, operators[i]);
 			
 			// aim to stop repeating states
-			for(Node expandedNode : expandedNodes) {
-				if(expandedNode.getState().equals(newNode.getState())) {
-					newNode = null;
-					break;
-				}
+			// TODO maybe will need to use a more efficient way
+			if(isRepeatedState(newNode, newNode.getState())) {
+				newNode = null;
 			}
 			
 			if(newNode != null) {
@@ -165,6 +163,19 @@ public class EndGame extends GeneralSearchProblem {
 			}
 		}
 		return expandedNodes;
+	}
+	
+	public boolean isRepeatedState(Node node, HashMap<String, ?> state) {
+		Node parentNode = node.getParentNode();
+		
+		if(parentNode == null) {
+			return true;
+		}
+		else if(parentNode.getState().equals(state)) {
+			return false;
+		} else {
+			return isRepeatedState(parentNode, state);
+		}
 	}
 
 }
