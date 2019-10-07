@@ -147,7 +147,14 @@ public class EndGame extends GeneralSearchProblem {
 		for(int i = 0; i <= operators.length; i ++) {
 			newNode = applyOperator(node, operators[i]);
 			
-			// TODO aim to stop repeating states
+			// aim to stop repeating states
+			for(Node expandedNode : expandedNodes) {
+				if(expandedNode.getState().equals(newNode.getState())) {
+					newNode = null;
+					break;
+				}
+			}
+			
 			if(newNode != null) {
 				expandedNodes.add(newNode);
 			} else {
