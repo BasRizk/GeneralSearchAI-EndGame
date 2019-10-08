@@ -17,6 +17,17 @@ abstract class GeneralSearchProblem {
 	public void setOperators(String [] operators) {
 		this.operators = operators;
 	}
+	public static void ucsSort(LinkedList<Node> nodesSearchQueue, Node node) {
+		    
+		   for(int i = 0; i < nodesSearchQueue.size() -1 ; i++) {
+		    
+			   if(nodesSearchQueue.get(i).getPathCost() >= node.getPathCost()) {
+				   nodesSearchQueue.add(i, node);
+				   return;
+			   }
+		   }
+		   nodesSearchQueue.addLast(node);
+	}
 	
 	public static String search(GeneralSearchProblem problem, String strategy, boolean verbose) {
 		
@@ -65,7 +76,9 @@ abstract class GeneralSearchProblem {
 			case "ID":
 			
 			case "UC":
-			
+				for(Node node : expandedNodes) {
+					ucsSort(nodesSearchQueue, node);
+				}
 			case "GR":
 			
 			case "AS":
