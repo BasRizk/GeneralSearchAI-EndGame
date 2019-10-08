@@ -77,4 +77,8 @@ public class Main {
 		return GeneralSearchProblem.search(endGameProblem, strategy, visualize);
 	}
 	
+	public static void main(String[] args) {
+		solve("5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3", "BF", false);
+	}
+	
 }

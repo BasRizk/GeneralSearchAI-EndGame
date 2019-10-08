@@ -35,6 +35,12 @@ public class EndGame extends GeneralSearchProblem {
 				"up", "down", "left", "right", 
 				"collect", "kill", "snap"};
 		this.setOperators(operators);
+		
+		this.gridWidth = gridWidth;
+		this.gridHeight = gridHeight;
+		this.worriorsPos = worriorsPos;
+		this.stonesPos = stonesPos;
+		this.thanosPos = thanosPos;
 	}
 	
 	private static Node createInitialState(int [] ironmanPos) {
@@ -72,7 +78,8 @@ public class EndGame extends GeneralSearchProblem {
 		}
 		if( nodeState.get("iX") == thanosPos[0] &&
 			nodeState.get("iY") ==  thanosPos[1] &&
-			nodeState.get("hp") >= 100) {
+			node.getPathCost() < 100 &&
+			node.getOperator() == "snap") {
 			return true;
 		}
 		
@@ -83,6 +90,8 @@ public class EndGame extends GeneralSearchProblem {
 		@SuppressWarnings("unchecked")
 		HashMap<String, Integer> nodeState = 
 				(HashMap<String, Integer>) node.getState().clone();
+		int cost = node.getPathCost();
+		int depth = node.getDepth() + 1;
 
 		Integer newValue;
 		switch(operator) {
@@ -91,6 +100,7 @@ public class EndGame extends GeneralSearchProblem {
 			newValue--;
 			if ( newValue >= 0) {
 				nodeState.put("iX", newValue);
+				cost++;
 			} else {
 				return null;
 			}
@@ -101,6 +111,7 @@ public class EndGame extends GeneralSearchProblem {
 			newValue++;
 			if ( newValue <= gridHeight) {
 				nodeState.put("iX", newValue);
+				cost++;
 			} else {
 				return null;
 			}
@@ -111,6 +122,7 @@ public class EndGame extends GeneralSearchProblem {
 			newValue--;
 			if ( newValue >= 0) {
 				nodeState.put("iY", newValue);
+				cost++;
 			} else {
 				return null;
 			}
@@ -121,6 +133,7 @@ public class EndGame extends GeneralSearchProblem {
 			newValue++;
 			if ( newValue <= gridWidth) {
 				nodeState.put("iY", newValue);
+				cost++;
 			} else {
 				return null;
 			}
@@ -128,28 +141,31 @@ public class EndGame extends GeneralSearchProblem {
 			
 		case "collect": 
 			// collecting stone decreases HP by 3
-
+			cost += 3;
+			
 			break;
 		case "kill":
-			// killing warrior increases HP by 2
+			// killing warrior decreases HP by 2
+			cost += 2;
 
 			break;
 		case "snap": break;
 		}
 		// thanos hits ironman by 5 hp
-		return null;
+				
+		return new Node(nodeState, node, operator, depth, cost);
 	}
 	
 	public ArrayList<Node> expandNode(Node node) {
 		
 		Node newNode;
 		ArrayList<Node> expandedNodes = new ArrayList<Node>();
-		for(int i = 0; i <= operators.length; i ++) {
+		for(int i = 0; i < operators.length; i ++) {
 			newNode = applyOperator(node, operators[i]);
 			
 			// aim to stop repeating states
 			// TODO maybe will need to use a more efficient way
-			if(isRepeatedState(newNode, newNode.getState())) {
+			if(newNode != null && isRepeatedState(newNode, newNode.getState())) {
 				newNode = null;
 			}
 			

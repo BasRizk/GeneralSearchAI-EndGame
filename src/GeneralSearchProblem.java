@@ -46,14 +46,22 @@ abstract class GeneralSearchProblem {
 			// TODO according to strategy expand the currentNode, and
 			// enqueue the resulted nodes in the according order. 
 			expandedNodes = problem.expandNode(currentNode);
+			nodesSearchQueue.removeLast();
 
 			switch(strategy) {
 			
 			case "BF":
+				for(Node node : expandedNodes) {
+					nodesSearchQueue.addFirst(node); 
+				}
 				
-				
+				break;
 			case "DF":
-			
+				for(Node node : expandedNodes) {
+					nodesSearchQueue.addLast(node); 
+				}
+				
+				break;
 			case "ID":
 			
 			case "UC":
