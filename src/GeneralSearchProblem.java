@@ -36,7 +36,7 @@ abstract class GeneralSearchProblem {
 		nodesSearchQueue.addLast(initState); 
 		
 		boolean success = false;
-		Node currentNode;
+		Node currentNode = null;
 		ArrayList<Node> expandedNodes;
 
 		while(true) {
@@ -48,6 +48,7 @@ abstract class GeneralSearchProblem {
 			}
 			
 			currentNode = nodesSearchQueue.getLast();
+//			System.out.println(nodesSearchQueue.getLast().getOperator());
 			
 			if(problem.goalTest(currentNode)) {
 				success = true;
@@ -99,6 +100,14 @@ abstract class GeneralSearchProblem {
 			String plan;
 			String cost;
 			String nodes;
+//			while(true) {
+//				System.out.print(currentNode.getOperator() + ", ");
+//				currentNode = currentNode.getParentNode();
+//				if(currentNode != null) {
+//					break;
+//				}
+//
+//			}
 			return "plan;cost;node";
 		}
 		

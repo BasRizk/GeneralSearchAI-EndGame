@@ -72,15 +72,7 @@ public class EndGame extends GeneralSearchProblem {
 		@SuppressWarnings("unchecked")
 		HashMap<String, Integer> nodeState =
 				(HashMap<String, Integer>) node.getState();
-		for(int i = 1; i <= 6; i++) {
-			if( nodeState
-					.get("s" + i + "C") == 0) {
-				return false;
-			};
-		}
-		if( nodeState.get("iX") == thanosPos[0] &&
-			nodeState.get("iY") ==  thanosPos[1] &&
-			node.getPathCost() < 100 &&
+		if( node.getPathCost() < 100 &&
 			node.getOperator() == "snap") {
 			return true;
 		}
@@ -122,6 +114,74 @@ public class EndGame extends GeneralSearchProblem {
 
 		Integer newValue;
 		switch(operator) {
+		case "collect": 
+			// collecting stone decreases HP by 3
+			for(int i = 1; i <= 6; i++) {
+				if( nodeState.get("s" + i + "C") == 0 && 
+					nodeState.get("iX") == this.stonesPos[(i-1) * 2] &&
+					nodeState.get("iY") == this.stonesPos[((i-1) * 2) + 1]) {
+					cost += 3;
+					nodeState.put("s" + i + "C", 1);
+					break;
+				} else if(i == 6) {
+					return null;
+				}
+			}
+			
+			break;
+
+		case "snap":
+			if(	this.thanosPos[0] == nodeState.get("iX") &&
+			  	this.thanosPos[1] == nodeState.get("iY")) {
+				
+				for(int i = 1; i <= 6; i++) {
+					if( nodeState.get("s" + i + "C") == 0) {
+						return null;
+					};
+				}
+			
+				return new Node(nodeState, node, operator, depth, cost); 
+				
+			} else {
+				return null;
+			}
+
+		case "kill":
+			// killing warrior decreases HP by 2
+			boolean isWorriorFound = false;
+			
+			for(int i = 1; i <= this.numOfWorriors; i++) {
+				if(nodeState.get("w" + i + "K") == 0) {
+					if( (this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == 1) ||
+						(this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == -1)) {
+						
+						if(this.worriorsPos[((i-1) * 2) + 1] == nodeState.get("iY")) {
+							isWorriorFound = true;
+							cost += 2;
+							nodeState.put("w" + i + "K", 1);
+						}
+						
+					} else if(this.worriorsPos[(i-1) * 2] == nodeState.get("iX")) {
+						
+						if( (this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == 1) || 
+							(this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == -1)) {
+							
+							isWorriorFound = true;
+							cost += 2;
+							nodeState.put("w" + i + "K", 1);
+							
+						}
+						
+					}
+				}
+			}
+			
+			if(!isWorriorFound) {
+				return null;
+			}
+
+			break;
+
 		case "up":
 			newValue = (Integer) nodeState.get("iX");
 			newValue--;
@@ -192,68 +252,8 @@ public class EndGame extends GeneralSearchProblem {
 			} else {
 				return null;
 			}
-			break;
-			
-		case "collect": 
-			// collecting stone decreases HP by 3
-			for(int i = 1; i <= 6; i++) {
-				if( nodeState.get("s" + i + "C") == 0 && 
-					nodeState.get("iX") == this.stonesPos[(i-1) * 2] &&
-					nodeState.get("iY") == this.stonesPos[((i-1) * 2) + 1]) {
-					cost += 3;
-					nodeState.put("s" + i + "C", 1);
-					break;
-				} else if(i == 6) {
-					return null;
-				}
-			}
-			
-			break;
-		case "kill":
-			// killing warrior decreases HP by 2
-			boolean isWorriorFound = false;
-			
-			for(int i = 1; i <= this.numOfWorriors; i++) {
-				if(nodeState.get("w" + i + "K") == 0) {
-					if( (this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == 1) ||
-						(this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == -1)) {
-						
-						if(this.worriorsPos[((i-1) * 2) + 1] == nodeState.get("iY")) {
-							isWorriorFound = true;
-							cost += 2;
-							nodeState.put("w" + i + "K", 1);
-						}
-						
-					} else if(this.worriorsPos[(i-1) * 2] == nodeState.get("iX")) {
-						
-						if( (this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == 1) || 
-							(this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == -1)) {
-							
-							isWorriorFound = true;
-							cost += 2;
-							nodeState.put("w" + i + "K", 1);
-							
-						}
-						
-					}
-				}
-			}
-			
-			if(!isWorriorFound) {
-				return null;
-			}
-
-			break;
-		case "snap":
-			if(this.thanosPos[0] == nodeState.get("iX") &&
-			  this.thanosPos[1] == nodeState.get("iY")) {
-			
-				return new Node(nodeState, node, operator, depth, cost); 
-				
-			} else {
-				return null;
-			}
-			
+			break;	
+					
 		}
 		
 		// warriors hits ironman by 1 hp each
