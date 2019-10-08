@@ -74,7 +74,10 @@ abstract class GeneralSearchProblem {
 				
 				break;
 			case "ID":
-			
+				nodesSearchQueue.addFirst(initState);
+				for(Node node: expandedNodes) {
+					nodesSearchQueue.addFirst(node);
+				}
 			case "UC":
 				for(Node node : expandedNodes) {
 					ucsSort(nodesSearchQueue, node);
