@@ -6,6 +6,7 @@ public class EndGame extends GeneralSearchProblem {
 	int [] worriorsPos;
 	int [] stonesPos;
 	int [] thanosPos;
+//	ArrayList<HashMap<String, Integer>> visitedStates;
 	int gridWidth;
 	int gridHeight;
 	int numOfWorriors;
@@ -46,6 +47,8 @@ public class EndGame extends GeneralSearchProblem {
 		this.stonesPos = stonesPos;
 		this.thanosPos = thanosPos;
 		this.numOfWorriors = worriorsPos.length / 2;
+		
+//		this.visitedStates = new ArrayList<HashMap<String,Integer>>();
 	}
 	
 	private static Node createInitialState(int [] ironmanPos, int numOfWorriors) {
@@ -69,9 +72,6 @@ public class EndGame extends GeneralSearchProblem {
 	
 	@Override
 	public boolean goalTest(Node node) {
-		@SuppressWarnings("unchecked")
-		HashMap<String, Integer> nodeState =
-				(HashMap<String, Integer>) node.getState();
 		if( node.getPathCost() < 100 &&
 			node.getOperator() == "snap") {
 			return true;
@@ -321,12 +321,14 @@ public class EndGame extends GeneralSearchProblem {
 			
 			// aim to stop repeating states
 			// TODO maybe will need to use a more efficient way
+//			if(newNode != null && this.visitedStates.contains(newNode.getState())) {
 			if(newNode != null && isRepeatedState(newNode, newNode.getState())) {
 				newNode = null;
 			}
 			
 			if(newNode != null) {
 				expandedNodes.add(newNode);
+//				this.visitedStates.add((HashMap<String, Integer>) newNode.getState());
 			} else {
 				//TODO
 			}
