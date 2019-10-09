@@ -100,14 +100,15 @@ abstract class GeneralSearchProblem {
 			String plan;
 			String cost;
 			String nodes;
-//			while(true) {
-//				System.out.print(currentNode.getOperator() + ", ");
-//				currentNode = currentNode.getParentNode();
-//				if(currentNode != null) {
-//					break;
-//				}
-//
-//			}
+			System.out.print(currentNode.getPathCost() + ", ");
+			while(true) {
+				if(currentNode == null) {
+					System.out.println("");
+					break;
+				}
+				System.out.print(currentNode.getOperator() + ", ");
+				currentNode = currentNode.getParentNode();
+			}
 			return "plan;cost;node";
 		}
 		

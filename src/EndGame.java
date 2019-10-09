@@ -6,7 +6,8 @@ public class EndGame extends GeneralSearchProblem {
 	int [] worriorsPos;
 	int [] stonesPos;
 	int [] thanosPos;
-//	ArrayList<HashMap<String, Integer>> visitedStates;
+	boolean areStonesCollected;
+	ArrayList<HashMap<String, Integer>> visitedStates;
 	int gridWidth;
 	int gridHeight;
 	int numOfWorriors;
@@ -38,7 +39,7 @@ public class EndGame extends GeneralSearchProblem {
 		super(createInitialState(ironmanPos, worriorsPos.length / 2));
 		String [] operators = new String []{
 				"up", "down", "left", "right", 
-				"collect", "kill", "snap"};
+				"kill", "snap", "collect"};
 		this.setOperators(operators);
 		
 		this.gridWidth = gridWidth;
@@ -47,8 +48,8 @@ public class EndGame extends GeneralSearchProblem {
 		this.stonesPos = stonesPos;
 		this.thanosPos = thanosPos;
 		this.numOfWorriors = worriorsPos.length / 2;
-		
-//		this.visitedStates = new ArrayList<HashMap<String,Integer>>();
+		this.areStonesCollected = false;
+		this.visitedStates = new ArrayList<HashMap<String,Integer>>();
 	}
 	
 	private static Node createInitialState(int [] ironmanPos, int numOfWorriors) {
@@ -114,74 +115,7 @@ public class EndGame extends GeneralSearchProblem {
 
 		Integer newValue;
 		switch(operator) {
-		case "collect": 
-			// collecting stone decreases HP by 3
-			for(int i = 1; i <= 6; i++) {
-				if( nodeState.get("s" + i + "C") == 0 && 
-					nodeState.get("iX") == this.stonesPos[(i-1) * 2] &&
-					nodeState.get("iY") == this.stonesPos[((i-1) * 2) + 1]) {
-					cost += 3;
-					nodeState.put("s" + i + "C", 1);
-					break;
-				} else if(i == 6) {
-					return null;
-				}
-			}
-			
-			break;
-
-		case "snap":
-			if(	this.thanosPos[0] == nodeState.get("iX") &&
-			  	this.thanosPos[1] == nodeState.get("iY")) {
-				
-				for(int i = 1; i <= 6; i++) {
-					if( nodeState.get("s" + i + "C") == 0) {
-						return null;
-					};
-				}
-			
-				return new Node(nodeState, node, operator, depth, cost); 
-				
-			} else {
-				return null;
-			}
-
-		case "kill":
-			// killing warrior decreases HP by 2
-			boolean isWorriorFound = false;
-			
-			for(int i = 1; i <= this.numOfWorriors; i++) {
-				if(nodeState.get("w" + i + "K") == 0) {
-					if( (this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == 1) ||
-						(this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == -1)) {
-						
-						if(this.worriorsPos[((i-1) * 2) + 1] == nodeState.get("iY")) {
-							isWorriorFound = true;
-							cost += 2;
-							nodeState.put("w" + i + "K", 1);
-						}
-						
-					} else if(this.worriorsPos[(i-1) * 2] == nodeState.get("iX")) {
-						
-						if( (this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == 1) || 
-							(this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == -1)) {
-							
-							isWorriorFound = true;
-							cost += 2;
-							nodeState.put("w" + i + "K", 1);
-							
-						}
-						
-					}
-				}
-			}
-			
-			if(!isWorriorFound) {
-				return null;
-			}
-
-			break;
-
+		
 		case "up":
 			newValue = (Integer) nodeState.get("iX");
 			newValue--;
@@ -252,8 +186,76 @@ public class EndGame extends GeneralSearchProblem {
 			} else {
 				return null;
 			}
-			break;	
-					
+			break;
+			
+		case "kill":
+			// killing warrior decreases HP by 2
+			boolean isWorriorFound = false;
+			
+			for(int i = 1; i <= this.numOfWorriors; i++) {
+				if(nodeState.get("w" + i + "K") == 0) {
+					if( (this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == 1) ||
+						(this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == -1)) {
+						
+						if(this.worriorsPos[((i-1) * 2) + 1] == nodeState.get("iY")) {
+							isWorriorFound = true;
+							cost += 2;
+							nodeState.put("w" + i + "K", 1);
+						}
+						
+					} else if(this.worriorsPos[(i-1) * 2] == nodeState.get("iX")) {
+						
+						if( (this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == 1) || 
+							(this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == -1)) {
+							
+							isWorriorFound = true;
+							cost += 2;
+							nodeState.put("w" + i + "K", 1);
+							
+						}
+						
+					}
+				}
+			}
+			
+			if(!isWorriorFound) {
+				return null;
+			}
+
+			break;
+			
+		case "snap":
+			if(	this.thanosPos[0] == nodeState.get("iX") &&
+			  	this.thanosPos[1] == nodeState.get("iY")) {
+				
+				for(int i = 1; i <= 6; i++) {
+					if( nodeState.get("s" + i + "C") == 0) {
+						return null;
+					}
+				}
+			
+				return new Node(nodeState, node, operator, depth, cost); 
+				
+			} else {
+				return null;
+			}
+			
+		case "collect": 
+			// collecting stone decreases HP by 3
+			for(int i = 1; i <= 6; i++) {
+				if( nodeState.get("s" + i + "C") == 0 && 
+					nodeState.get("iX") == this.stonesPos[(i-1) * 2] &&
+					nodeState.get("iY") == this.stonesPos[((i-1) * 2) + 1]) {
+					cost += 3;
+					nodeState.put("s" + i + "C", 1);
+					break;
+				} else if(i == 6) {
+					return null;
+				}
+			}
+			
+			break;
+
 		}
 		
 		// warriors hits ironman by 1 hp each
@@ -307,6 +309,14 @@ public class EndGame extends GeneralSearchProblem {
 			
 		}
 		
+		for(int i = 1; i <= 6; i++) {
+			if( nodeState.get("s" + i + "C") == 0) {
+				break;
+			} else if(i == 6) {
+				this.areStonesCollected = true;
+			}
+		}
+		
 //		System.out.println("Pass");
 
 		return new Node(nodeState, node, operator, depth, cost);
@@ -321,32 +331,25 @@ public class EndGame extends GeneralSearchProblem {
 			
 			// aim to stop repeating states
 			// TODO maybe will need to use a more efficient way
-//			if(newNode != null && this.visitedStates.contains(newNode.getState())) {
-			if(newNode != null && isRepeatedState(newNode, newNode.getState())) {
+			if(newNode != null && this.visitedStates.contains(newNode.getState())) {
 				newNode = null;
 			}
 			
 			if(newNode != null) {
 				expandedNodes.add(newNode);
-//				this.visitedStates.add((HashMap<String, Integer>) newNode.getState());
+				if( (int) newNode.getState().get("iX") == this.thanosPos[0] &&
+					(int) newNode.getState().get("iY") == this.thanosPos[1] &&
+					areStonesCollected) {
+					// Do not consider it as repeated state
+				} else {
+					this.visitedStates.add((HashMap<String, Integer>) newNode.getState());
+				}
+				
 			} else {
 				//TODO
 			}
 		}
 		return expandedNodes;
-	}
-	
-	public boolean isRepeatedState(Node node, HashMap<String, ?> state) {
-		Node parentNode = node.getParentNode();
-		
-		if(parentNode == null) {
-			return false;
-		}
-		else if(parentNode.getState().equals(state)) {
-			return true;
-		} else {
-			return isRepeatedState(parentNode, state);
-		}
 	}
 
 }
