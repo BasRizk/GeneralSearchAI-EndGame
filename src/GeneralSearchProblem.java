@@ -19,9 +19,9 @@ abstract class GeneralSearchProblem {
 	}
 	public static void ucsSort(LinkedList<Node> nodesSearchQueue, Node node) {
 		    
-		   for(int i = 0; i < nodesSearchQueue.size() -1 ; i++) {
+		   for(int i = 0; i < nodesSearchQueue.size(); i++) {
 		    
-			   if(nodesSearchQueue.get(i).getPathCost() >= node.getPathCost()) {
+			   if(nodesSearchQueue.get(i).getPathCost() <= node.getPathCost()) {
 				   nodesSearchQueue.add(i, node);
 				   return;
 			   }
