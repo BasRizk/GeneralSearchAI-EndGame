@@ -53,7 +53,7 @@ public class EndGame extends GeneralSearchProblem {
 	}
 	
 	private static Node createInitialState(int [] ironmanPos, int numOfWorriors) {
-		HashMap<String, Integer> state; Node parentNode;
+		HashMap<String, Integer> state; Node parentNode; String operator;
 		int depth; int pathCost;
 
 		state = new HashMap<String, Integer>();
@@ -65,10 +65,11 @@ public class EndGame extends GeneralSearchProblem {
 			state.put("w" + i + "K",0);
 		}
 		parentNode = null;
+		operator = null;
 		depth = 1;
 		pathCost = 0;
 		
-		return new Node(state, parentNode, null, depth, pathCost);		
+		return new Node(state, parentNode, operator, depth, pathCost);		
 	}
 	
 	@Override
@@ -82,9 +83,8 @@ public class EndGame extends GeneralSearchProblem {
 	}		
 
 	public Node applyOperator(Node node, String operator) {
-		@SuppressWarnings("unchecked")
 		HashMap<String, Integer> nodeState = new HashMap<String, Integer>();		
-		HashMap<String, Integer> oldState = (HashMap<String, Integer>) node.getState();
+		HashMap<String, Integer> oldState = node.getState();
 		
 		// Initialize node state with the previous state values
 		nodeState.put("iX", oldState.get("iX")); nodeState.put("iY", oldState.get("iY"));
@@ -267,7 +267,6 @@ public class EndGame extends GeneralSearchProblem {
 					if(this.worriorsPos[((i-1) * 2) + 1] == nodeState.get("iY")) {
 						
 						cost++;
-						
 					}
 					
 				} else if(this.worriorsPos[(i-1) * 2] == nodeState.get("iX")) {
@@ -275,10 +274,8 @@ public class EndGame extends GeneralSearchProblem {
 					if( (this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == 1) || 
 						(this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == -1)) {
 						
-						cost++;
-						
-					}
-					
+						cost++;	
+					}	
 				}
 			}
 		}
@@ -324,35 +321,30 @@ public class EndGame extends GeneralSearchProblem {
 	
 	public ArrayList<Node> expandNode(Node node) {
 		
-		Node newNode;
+		Node newNode; Integer pastSimilarNodeCost;
 		ArrayList<Node> expandedNodes = new ArrayList<Node>();
 		for(int i = 0; i < operators.length; i ++) {
 			newNode = applyOperator(node, operators[i]);
 			
-			// aim to stop repeating states
-			// TODO maybe will need to use a more efficient way
 			if(newNode != null) {
-				if(this.visitedStates.containsKey(newNode.getState())) {
-					if(this.visitedStates.get(newNode.getState()) - newNode.getPathCost() > 40) {
-						this.visitedStates.remove((HashMap<String, Integer>)newNode.getState());
-					} else {
-						newNode = null;
-					}
-				}
-			}
-			
-			if(newNode != null) {
-				expandedNodes.add(newNode);
 				if( (int) newNode.getState().get("iX") == this.thanosPos[0] &&
-					(int) newNode.getState().get("iY") == this.thanosPos[1] &&
-					areStonesCollected) {
+						(int) newNode.getState().get("iY") == this.thanosPos[1] &&
+						areStonesCollected) {
 					// Do not consider it as repeated state
-				} else {
-					this.visitedStates.put((HashMap<String, Integer>)newNode.getState(), newNode.getPathCost());
+					expandedNodes.add(newNode);
+					continue;
 				}
 				
-			} else {
-				//TODO
+				pastSimilarNodeCost = this.visitedStates.get(newNode.getState());
+				if(pastSimilarNodeCost != null) {
+					if(pastSimilarNodeCost - newNode.getPathCost() < 40) {
+						continue;
+					}
+				}
+				
+				this.visitedStates.put(newNode.getState(), newNode.getPathCost());				
+				expandedNodes.add(newNode);
+
 			}
 		}
 		return expandedNodes;
