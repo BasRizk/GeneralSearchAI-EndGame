@@ -38,6 +38,8 @@ abstract class GeneralSearchProblem {
 		boolean success = false;
 		Node currentNode = null;
 		ArrayList<Node> expandedNodes;
+		int depthCounter = 1;
+		int numOfNodes = 0;
 
 		while(true) {
 				
@@ -58,6 +60,7 @@ abstract class GeneralSearchProblem {
 			// TODO according to strategy expand the currentNode, and
 			// enqueue the resulted nodes in the according order. 
 			expandedNodes = problem.expandNode(currentNode);
+			numOfNodes++;
 			nodesSearchQueue.removeLast();
 
 			switch(strategy) {
@@ -75,18 +78,29 @@ abstract class GeneralSearchProblem {
 				
 				break;
 			case "ID":
-				int size = expandedNodes.size();
-				System.out.println(expandedNodes.get(size-1));
-				int maxDepth = (expandedNodes.get(size-1)).getDepth();
-				int depthCounter = 0;
-				while (depthCounter <= maxDepth){
+//				int size = expandedNodes.size();
+//				System.out.println(expandedNodes.get(size-1));
+//				int maxDepth = (expandedNodes.get(size-1)).getDepth();
+//				depthCounter = 0;
+//				while (depthCounter <= maxDepth){
+//					depthCounter++;
+//					for(Node node: expandedNodes) {
+//						if(node.getDepth() > depthCounter) {
+//						break;
+//							}
+//						nodesSearchQueue.addLast(node);
+//						}
+//				}
+				
+				for(Node node: expandedNodes) {
+					if(node.getDepth() > depthCounter) {
+						continue;
+					}
+					nodesSearchQueue.addLast(node);
+				}
+				if(nodesSearchQueue.isEmpty() && !expandedNodes.isEmpty()) {
+					nodesSearchQueue.addLast(initState);
 					depthCounter++;
-					for(Node node: expandedNodes) {
-						if(node.getDepth() > depthCounter) {
-						break;
-							}
-						nodesSearchQueue.addLast(node);
-						}
 				}
 			case "UC":
 				for(Node node : expandedNodes) {
@@ -118,6 +132,7 @@ abstract class GeneralSearchProblem {
 				System.out.print(currentNode.getOperator() + ", ");
 				currentNode = currentNode.getParentNode();
 			}
+			System.out.println(numOfNodes);
 			return "plan;cost;node";
 		}
 		

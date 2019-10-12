@@ -12,6 +12,15 @@ public class EndGame extends GeneralSearchProblem {
 	int gridHeight;
 	int numOfWorriors;
 	
+	HashMap<String, Integer> nodeState;		
+	HashMap<String, Integer> oldState;
+	int cost;
+	int depth;
+	Integer newValue;
+	boolean isWorriorFound;
+	Node newNode; Integer pastSimilarNodeCost;
+	ArrayList<Node> expandedNodes;
+	
 	/**
 	 * EndGame search tree consists of Nodes, just like any search tree;
 	 * the only difference, that make these Node belong to the EndGame
@@ -49,7 +58,9 @@ public class EndGame extends GeneralSearchProblem {
 		this.thanosPos = thanosPos;
 		this.numOfWorriors = worriorsPos.length / 2;
 		this.areStonesCollected = false;
-		this.visitedStates = new HashMap<HashMap<String,Integer>, Integer>();
+		this.visitedStates = new HashMap<HashMap<String,Integer>, Integer>();		
+		
+		expandedNodes = new ArrayList<Node>();
 	}
 	
 	private static Node createInitialState(int [] ironmanPos, int numOfWorriors) {
@@ -83,8 +94,8 @@ public class EndGame extends GeneralSearchProblem {
 	}		
 
 	public Node applyOperator(Node node, String operator) {
-		HashMap<String, Integer> nodeState = new HashMap<String, Integer>();		
-		HashMap<String, Integer> oldState = node.getState();
+		nodeState = new HashMap<String, Integer>();		
+		oldState = node.getState();
 		
 		// Initialize node state with the previous state values
 		nodeState.put("iX", oldState.get("iX")); nodeState.put("iY", oldState.get("iY"));
@@ -105,15 +116,14 @@ public class EndGame extends GeneralSearchProblem {
 //		System.out.println("--");
 
 
-		int cost = node.getPathCost();
-		int depth = node.getDepth() + 1;
+		cost = node.getPathCost();
+		depth = node.getDepth() + 1;
 		
 		// TODO is this allowed?
 		if(cost > 100) {
 			return null;
 		}
 
-		Integer newValue;
 		switch(operator) {
 		
 		case "up":
@@ -190,7 +200,7 @@ public class EndGame extends GeneralSearchProblem {
 			
 		case "kill":
 			// killing warrior decreases HP by 2
-			boolean isWorriorFound = false;
+			isWorriorFound = false;
 			
 			for(int i = 1; i <= this.numOfWorriors; i++) {
 				if(nodeState.get("w" + i + "K") == 0) {
@@ -233,9 +243,8 @@ public class EndGame extends GeneralSearchProblem {
 						return null;
 					}
 				}
-			
-				return new Node(nodeState, node, operator, depth, cost); 
 				
+				return new Node(nodeState, node, operator, depth, cost); 
 			} else {
 				return null;
 			}
@@ -306,14 +315,6 @@ public class EndGame extends GeneralSearchProblem {
 			
 		}
 		
-		for(int i = 1; i <= 6; i++) {
-			if( nodeState.get("s" + i + "C") == 0) {
-				break;
-			} else if(i == 6) {
-				this.areStonesCollected = true;
-			}
-		}
-		
 //		System.out.println("Pass");
 
 		return new Node(nodeState, node, operator, depth, cost);
@@ -321,12 +322,20 @@ public class EndGame extends GeneralSearchProblem {
 	
 	public ArrayList<Node> expandNode(Node node) {
 		
-		Node newNode; Integer pastSimilarNodeCost;
-		ArrayList<Node> expandedNodes = new ArrayList<Node>();
+		expandedNodes.clear();
 		for(int i = 0; i < operators.length; i ++) {
 			newNode = applyOperator(node, operators[i]);
 			
 			if(newNode != null) {
+				for(int j = 1; j <= 6; j++) {
+					if( newNode.getState().get("s" + j + "C") == 0) {
+						break;
+					} else if(j == 6) {
+						this.areStonesCollected = true;
+					} else {
+						areStonesCollected = false;
+					}
+				}
 				if( (int) newNode.getState().get("iX") == this.thanosPos[0] &&
 						(int) newNode.getState().get("iY") == this.thanosPos[1] &&
 						areStonesCollected) {
