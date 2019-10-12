@@ -78,30 +78,35 @@ abstract class GeneralSearchProblem {
 				
 				break;
 			case "ID":
-//				int size = expandedNodes.size();
-//				System.out.println(expandedNodes.get(size-1));
-//				int maxDepth = (expandedNodes.get(size-1)).getDepth();
-//				depthCounter = 0;
-//				while (depthCounter <= maxDepth){
-//					depthCounter++;
-//					for(Node node: expandedNodes) {
-//						if(node.getDepth() > depthCounter) {
-//						break;
-//							}
-//						nodesSearchQueue.addLast(node);
-//						}
-//				}
-				
-				for(Node node: expandedNodes) {
-					if(node.getDepth() > depthCounter) {
-						continue;
-					}
-					nodesSearchQueue.addLast(node);
+				int size = expandedNodes.size();
+				int maxDepth;
+				if(expandedNodes.size() > 0) {
+					maxDepth = (expandedNodes.get(size-1)).getDepth();
+				} else {
+					maxDepth = 0;
 				}
-				if(nodesSearchQueue.isEmpty() && !expandedNodes.isEmpty()) {
-					nodesSearchQueue.addLast(initState);
+				depthCounter = 0;
+				while (depthCounter <= maxDepth){
 					depthCounter++;
+					for(Node node: expandedNodes) {
+						if(node.getDepth() > depthCounter) {
+							break;
+						}
+						
+						nodesSearchQueue.addLast(node);
+					}
 				}
+				
+//				for(Node node: expandedNodes) {
+//					if(node.getDepth() > depthCounter) {
+//						continue;
+//					}
+//					nodesSearchQueue.addLast(node);
+//				}
+//				if(nodesSearchQueue.isEmpty() && !expandedNodes.isEmpty()) {
+//					nodesSearchQueue.addLast(initState);
+//					depthCounter++;
+//				}
 			case "UC":
 				for(Node node : expandedNodes) {
 					ucsSort(nodesSearchQueue, node);
