@@ -75,9 +75,17 @@ abstract class GeneralSearchProblem {
 				
 				break;
 			case "ID":
-				nodesSearchQueue.addFirst(initState);
-				for(Node node: expandedNodes) {
-					nodesSearchQueue.addFirst(node);
+				int size = expandedNodes.size();
+				int maxDepth = expandedNodes.get(size).getDepth();
+				int depthCounter = 0;
+				while (depthCounter <= maxDepth){
+					depthCounter++;
+					for(Node node: expandedNodes) {
+						if(node.getDepth() > depthCounter) {
+						break;
+							}
+						nodesSearchQueue.addLast(node);
+						}
 				}
 			case "UC":
 				for(Node node : expandedNodes) {
