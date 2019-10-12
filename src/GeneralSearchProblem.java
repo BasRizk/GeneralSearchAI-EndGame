@@ -76,7 +76,8 @@ abstract class GeneralSearchProblem {
 				break;
 			case "ID":
 				int size = expandedNodes.size();
-				int maxDepth = expandedNodes.get(size).getDepth();
+				System.out.println(expandedNodes.get(size-1));
+				int maxDepth = (expandedNodes.get(size-1)).getDepth();
 				int depthCounter = 0;
 				while (depthCounter <= maxDepth){
 					depthCounter++;

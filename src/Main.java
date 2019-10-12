@@ -79,7 +79,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		long startTime = System.nanoTime();
-		solve("5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3", "DF", false);
+		solve("5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3", "ID", false);
 		long endTime   = System.nanoTime();
 		long totalTime = endTime - startTime;
 		System.out.println((double)totalTime/1000000000f);
