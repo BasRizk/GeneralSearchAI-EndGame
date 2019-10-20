@@ -3,14 +3,14 @@ import java.util.HashMap;
 
 public class Node {
 
-	private HashMap<String, Integer> state;
+	private ArrayList<Integer> state;
 	private Node parentNode;
 
 	private String operator;
 	private int depth;
 	private int pathCost;
 	
-	public Node(HashMap<String, Integer> state, Node parentNode, String operator, int depth, int pathCost) {
+	public Node(ArrayList<Integer> state, Node parentNode, String operator, int depth, int pathCost) {
 		this.state = state;
 		this.parentNode = parentNode;
 		this.operator = operator;
@@ -32,7 +32,7 @@ public class Node {
 		return  getPlanRec(plan, node.parentNode);
 	}
 
-	public HashMap<String, Integer> getState() {
+	public ArrayList<Integer> getState() {
 		return state;
 	}
 

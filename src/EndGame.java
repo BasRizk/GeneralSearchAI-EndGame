@@ -7,16 +7,16 @@ public class EndGame extends GeneralSearchProblem {
 	int [] stonesPos;
 	int [] thanosPos;
 	boolean areStonesCollected;
-	HashMap<HashMap<String, Integer>, Integer> visitedStates;
+	ArrayList<ArrayList<Integer>> visitedStates;
 	int gridWidth;
 	int gridHeight;
 	int numOfWorriors;
 	
-	HashMap<String, Integer> nodeState;		
-	HashMap<String, Integer> oldState;
+	ArrayList<Integer> nodeState;		
+	ArrayList<Integer> oldState;
 	int cost;
 	int depth;
-	Integer newValue;
+	int newValue;
 	boolean isWorriorFound;
 	Node newNode; Integer pastSimilarNodeCost;
 	ArrayList<Node> expandedNodes;
@@ -58,22 +58,22 @@ public class EndGame extends GeneralSearchProblem {
 		this.thanosPos = thanosPos;
 		this.numOfWorriors = worriorsPos.length / 2;
 		this.areStonesCollected = false;
-		this.visitedStates = new HashMap<HashMap<String,Integer>, Integer>();		
+		this.visitedStates = new ArrayList<ArrayList<Integer>>();
 		
 		expandedNodes = new ArrayList<Node>();
 	}
 	
 	private static Node createInitialState(int [] ironmanPos, int numOfWorriors) {
-		HashMap<String, Integer> state; Node parentNode; String operator;
+		ArrayList<Integer> state; Node parentNode; String operator;
 		int depth; int pathCost;
 
-		state = new HashMap<String, Integer>();
-		state.put("iX",ironmanPos[0]); state.put("iY",ironmanPos[1]);
+		state = new ArrayList<Integer>();
+		state.add(ironmanPos[0]); state.add(ironmanPos[1]);
 		for(int i = 1; i <= 6; i++) {
-			state.put("s" + i + "C",0);
+			state.add(0);
 		}
 		for(int i = 1; i <= numOfWorriors; i++) {
-			state.put("w" + i + "K",0);
+			state.add(0);
 		}
 		parentNode = null;
 		operator = null;
@@ -94,23 +94,16 @@ public class EndGame extends GeneralSearchProblem {
 	}		
 
 	public Node applyOperator(Node node, String operator) {
-		nodeState = new HashMap<String, Integer>();		
+		nodeState = new ArrayList<Integer>();		
 		oldState = node.getState();
 		
 		// Initialize node state with the previous state values
-		nodeState.put("iX", oldState.get("iX")); nodeState.put("iY", oldState.get("iY"));
-		for(int i = 1; i <= 6; i++) {
-			nodeState.put("s" + i + "C", oldState.get("s" + i + "C"));
-//			System.out.println(nodeState.get("s" + i + "C"));
-		}
-		for(int i = 1; i <= numOfWorriors; i++) {
-			nodeState.put("w" + i + "K", oldState.get("w" + i + "K"));
-//			System.out.println(nodeState.get("s" + i + "C"));
-		}
+		nodeState = (ArrayList<Integer>)oldState.clone();
 		
+//		for(int i = 0; i < nodeState.size(); i++) {
+//			System.out.println(nodeState.get(i));
+//		}
 //		System.out.println(operator);
-//		System.out.println(nodeState.get("iX"));
-//		System.out.println(nodeState.get("iY"));
 //		System.out.println(node.getPathCost());
 //		System.out.println(node.getDepth());
 //		System.out.println("--");
@@ -127,72 +120,72 @@ public class EndGame extends GeneralSearchProblem {
 		switch(operator) {
 		
 		case "up":
-			newValue = (Integer) nodeState.get("iX");
+			newValue = nodeState.get(0);
 			newValue--;
 			if ( newValue >= 0) {
-				for(int i = 1; i <= this.numOfWorriors; i++) {
-					if(nodeState.get("w" + i + "K") == 0) {
-						if( (this.worriorsPos[(i-1) * 2] == newValue) &&
-							(this.worriorsPos[((i-1) * 2) + 1] == nodeState.get("iY"))) {
+				for(int i = 0; i < this.numOfWorriors; i++) {
+					if(nodeState.get(i + 8) == 0) {
+						if( (this.worriorsPos[i * 2] == newValue) &&
+							(this.worriorsPos[(i * 2) + 1] == nodeState.get(1))) {
 							return null;
 						}
 					}
 				}
-				nodeState.put("iX", newValue);				
+				nodeState.set(0, newValue);				
 			} else {
 				return null;
 			}
 			break;
 			
 		case "down":
-			newValue = (Integer) nodeState.get("iX");
+			newValue = nodeState.get(0);
 			newValue++;
 			if ( newValue < gridHeight) {
-				for(int i = 1; i <= this.numOfWorriors; i++) {
-					if(nodeState.get("w" + i + "K") == 0) {
-						if( (this.worriorsPos[(i-1) * 2] == newValue) &&
-							(this.worriorsPos[((i-1) * 2) + 1] == nodeState.get("iY"))) {
+				for(int i = 0; i < this.numOfWorriors; i++) {
+					if(nodeState.get(i + 8) == 0) {
+						if( (this.worriorsPos[i * 2] == newValue) &&
+							(this.worriorsPos[(i * 2) + 1] == nodeState.get(1))) {
 							return null;
 						}
 					}
 				}
-				nodeState.put("iX", newValue);
+				nodeState.set(0, newValue);
 			} else {
 				return null;
 			}
 			break;
 			
 		case "left":
-			newValue = (Integer) nodeState.get("iY");
+			newValue = (Integer) nodeState.get(1);
 			newValue--;
 			if ( newValue >= 0) {
-				for(int i = 1; i <= this.numOfWorriors; i++) {
-					if(nodeState.get("w" + i + "K") == 0) {
-						if( (this.worriorsPos[(i-1) * 2] == nodeState.get("iX")) &&
-							(this.worriorsPos[((i-1) * 2) + 1] == newValue)) {
+				for(int i = 0; i < this.numOfWorriors; i++) {
+					if(nodeState.get(i + 8) == 0) {
+						if( (this.worriorsPos[i * 2] == nodeState.get(0)) &&
+							(this.worriorsPos[(i * 2) + 1] == newValue)) {
 							return null;
 						}
 					}
 				}
-				nodeState.put("iY", newValue);
+				nodeState.set(1, newValue);
 			} else {
 				return null;
 			}
 			break;
 			
 		case "right": 
-			newValue = (Integer) nodeState.get("iY");
+			newValue = (Integer) nodeState.get(1);
 			newValue++;
 			if ( newValue < gridWidth) {
-				for(int i = 1; i <= this.numOfWorriors; i++) {
-					if(nodeState.get("w" + i + "K") == 0) {
-						if( (this.worriorsPos[(i-1) * 2] == nodeState.get("iX")) &&
-							(this.worriorsPos[((i-1) * 2) + 1] == newValue)) {
+				for(int i = 0; i < this.numOfWorriors; i++) {
+					if(nodeState.get(i + 8) == 0) {
+						if( (this.worriorsPos[i * 2] == nodeState.get(0)) &&
+							(this.worriorsPos[(i * 2) + 1] == newValue)) {
 							return null;
 						}
 					}
 				}
-				nodeState.put("iY", newValue);
+				nodeState.set(1, newValue);
 			} else {
 				return null;
 			}
@@ -202,25 +195,25 @@ public class EndGame extends GeneralSearchProblem {
 			// killing warrior decreases HP by 2
 			isWorriorFound = false;
 			
-			for(int i = 1; i <= this.numOfWorriors; i++) {
-				if(nodeState.get("w" + i + "K") == 0) {
-					if( (this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == 1) ||
-						(this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == -1)) {
+			for(int i = 0; i < this.numOfWorriors; i++) {
+				if(nodeState.get(i + 8) == 0) {
+					if( (this.worriorsPos[i * 2] - nodeState.get(0) == 1) ||
+						(this.worriorsPos[i * 2] - nodeState.get(0) == -1)) {
 						
-						if(this.worriorsPos[((i-1) * 2) + 1] == nodeState.get("iY")) {
+						if(this.worriorsPos[(i * 2) + 1] == nodeState.get(1)) {
 							isWorriorFound = true;
 							cost += 2;
-							nodeState.put("w" + i + "K", 1);
+							nodeState.set(i + 8, 1);
 						}
 						
-					} else if(this.worriorsPos[(i-1) * 2] == nodeState.get("iX")) {
+					} else if(this.worriorsPos[i * 2] == nodeState.get(0)) {
 						
-						if( (this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == 1) || 
-							(this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == -1)) {
+						if( (this.worriorsPos[(i * 2) + 1] - nodeState.get(1) == 1) || 
+							(this.worriorsPos[(i * 2) + 1] - nodeState.get(1) == -1)) {
 							
 							isWorriorFound = true;
 							cost += 2;
-							nodeState.put("w" + i + "K", 1);
+							nodeState.set(i + 8, 1);
 							
 						}
 						
@@ -235,11 +228,11 @@ public class EndGame extends GeneralSearchProblem {
 			break;
 			
 		case "snap":
-			if(	this.thanosPos[0] == nodeState.get("iX") &&
-			  	this.thanosPos[1] == nodeState.get("iY")) {
+			if(	this.thanosPos[0] == nodeState.get(0) &&
+			  	this.thanosPos[1] == nodeState.get(1)) {
 				
-				for(int i = 1; i <= 6; i++) {
-					if( nodeState.get("s" + i + "C") == 0) {
+				for(int i = 0; i < 6; i++) {
+					if( nodeState.get(i + 2) == 0) {
 						return null;
 					}
 				}
@@ -251,14 +244,14 @@ public class EndGame extends GeneralSearchProblem {
 			
 		case "collect": 
 			// collecting stone decreases HP by 3
-			for(int i = 1; i <= 6; i++) {
-				if( nodeState.get("s" + i + "C") == 0 && 
-					nodeState.get("iX") == this.stonesPos[(i-1) * 2] &&
-					nodeState.get("iY") == this.stonesPos[((i-1) * 2) + 1]) {
+			for(int i = 0; i < 6; i++) {
+				if( nodeState.get(i + 2) == 0 && 
+					nodeState.get(0) == this.stonesPos[i * 2] &&
+					nodeState.get(1) == this.stonesPos[(i * 2) + 1]) {
 					cost += 3;
-					nodeState.put("s" + i + "C", 1);
+					nodeState.set(i + 2, 1);
 					break;
-				} else if(i == 6) {
+				} else if(i == 5) {
 					return null;
 				}
 			}
@@ -268,20 +261,20 @@ public class EndGame extends GeneralSearchProblem {
 		}
 		
 		// warriors hits ironman by 1 hp each
-		for(int i = 1; i <= this.numOfWorriors; i++) {
-			if(nodeState.get("w" + i + "K") == 0) {
-				if( (this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == 1) ||
-					(this.worriorsPos[(i-1) * 2] - nodeState.get("iX") == -1)) {
+		for(int i = 0; i < this.numOfWorriors; i++) {
+			if(nodeState.get(i + 8) == 0) {
+				if( (this.worriorsPos[i * 2] - nodeState.get(0) == 1) ||
+					(this.worriorsPos[i * 2] - nodeState.get(0) == -1)) {
 					
-					if(this.worriorsPos[((i-1) * 2) + 1] == nodeState.get("iY")) {
+					if(this.worriorsPos[(i * 2) + 1] == nodeState.get(1)) {
 						
 						cost++;
 					}
 					
-				} else if(this.worriorsPos[(i-1) * 2] == nodeState.get("iX")) {
+				} else if(this.worriorsPos[i * 2] == nodeState.get(0)) {
 					
-					if( (this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == 1) || 
-						(this.worriorsPos[((i-1) * 2) + 1] - nodeState.get("iY") == -1)) {
+					if( (this.worriorsPos[(i * 2) + 1] - nodeState.get(1) == 1) || 
+						(this.worriorsPos[(i * 2) + 1] - nodeState.get(1) == -1)) {
 						
 						cost++;	
 					}	
@@ -290,26 +283,26 @@ public class EndGame extends GeneralSearchProblem {
 		}
 		
 		// thanos hits ironman by 5 hp
-		if( (this.thanosPos[0] - nodeState.get("iX") == 1) || 
-			(this.thanosPos[0] - nodeState.get("iX") == -1)) {
+		if( (this.thanosPos[0] - nodeState.get(0) == 1) || 
+			(this.thanosPos[0] - nodeState.get(0) == -1)) {
 			
-			if(this.thanosPos[1] == nodeState.get("iY")) {
+			if(this.thanosPos[1] == nodeState.get(1)) {
 				
 				cost += 5;
 				
 			}
 				
-		} else if(this.thanosPos[0] == nodeState.get("iX")) {
+		} else if(this.thanosPos[0] == nodeState.get(0)) {
 			
-			if( (this.thanosPos[1] - nodeState.get("iY") == 1) ||
-				(this.thanosPos[1] - nodeState.get("iY") == -1)) {
+			if( (this.thanosPos[1] - nodeState.get(1) == 1) ||
+				(this.thanosPos[1] - nodeState.get(1) == -1)) {
 				
 				cost += 5;
 				
 			}
 			
-		} else if(this.thanosPos[0] == nodeState.get("iX") &&
-				  this.thanosPos[1] == nodeState.get("iY")) {
+		} else if(this.thanosPos[0] == nodeState.get(0) &&
+				  this.thanosPos[1] == nodeState.get(1)) {
 				
 			cost += 5;
 			
@@ -327,33 +320,61 @@ public class EndGame extends GeneralSearchProblem {
 			newNode = applyOperator(node, operators[i]);
 			
 			if(newNode != null) {
-				for(int j = 1; j <= 6; j++) {
-					if( newNode.getState().get("s" + j + "C") == 0) {
+				areStonesCollected = false;
+				for(int j = 0; j < 6; j++) {
+					if( newNode.getState().get(j + 2) == 0) {
 						break;
-					} else if(j == 6) {
+					} else if(j == 5) {
 						this.areStonesCollected = true;
-					} else {
-						areStonesCollected = false;
 					}
 				}
-				if( (int) newNode.getState().get("iX") == this.thanosPos[0] &&
-						(int) newNode.getState().get("iY") == this.thanosPos[1] &&
+				
+				if( (int) newNode.getState().get(0) == this.thanosPos[0] &&
+						(int) newNode.getState().get(1) == this.thanosPos[1] &&
 						areStonesCollected) {
 					// Do not consider it as repeated state
 					expandedNodes.add(newNode);
 					continue;
 				}
 				
-				pastSimilarNodeCost = this.visitedStates.get(newNode.getState());
-				if(pastSimilarNodeCost != null) {
-					if(pastSimilarNodeCost - newNode.getPathCost() < 40) {
-						continue;
-					}
-				}
+					
+//				for(int j = 0; j < newNode.getState().size(); j++)
+//				{
+//					System.out.print(newNode.getState().get(j));
+//				}
+//				System.out.println("");
+					
 				
-				this.visitedStates.put(newNode.getState(), newNode.getPathCost());				
-				expandedNodes.add(newNode);
+				boolean addState = true;
+				for(int j = 0; j < visitedStates.size(); j++) {
+					ArrayList<Integer> oldState = visitedStates.get(j);
+					if(
+							oldState.get(0) == newNode.getState().get(0) &&
+							oldState.get(1) == newNode.getState().get(1) &&
+							oldState.get(2) == newNode.getState().get(2) &&
+							oldState.get(3) == newNode.getState().get(3) &&
+							oldState.get(4) == newNode.getState().get(4) &&
+							oldState.get(5) == newNode.getState().get(5) &&
+							oldState.get(6) == newNode.getState().get(6) &&
+							oldState.get(7) == newNode.getState().get(7) &&
+							oldState.get(8) == newNode.getState().get(8) &&
+							oldState.get(9) == newNode.getState().get(9) &&
+							oldState.get(10) == newNode.getState().get(10) &&
+							oldState.get(11) == newNode.getState().get(11) &&
+							oldState.get(12) == newNode.getState().get(12)
+							)
+					{
+						addState = false;
+						break;
+					}
+					
+				}
 
+				
+				if(addState) {
+					this.visitedStates.add(newNode.getState());	
+					expandedNodes.add(newNode);
+				}
 			}
 		}
 		return expandedNodes;
