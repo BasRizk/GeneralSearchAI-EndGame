@@ -338,6 +338,11 @@ public class EndGame extends GeneralSearchProblem {
 				}
 				if( (int) newNode.getState().get("iX") == this.thanosPos[0] &&
 						(int) newNode.getState().get("iY") == this.thanosPos[1] &&
+						!areStonesCollected) {
+					continue;
+				}
+				if( (int) newNode.getState().get("iX") == this.thanosPos[0] &&
+						(int) newNode.getState().get("iY") == this.thanosPos[1] &&
 						areStonesCollected) {
 					// Do not consider it as repeated state
 					expandedNodes.add(newNode);
