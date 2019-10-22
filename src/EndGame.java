@@ -328,7 +328,11 @@ public class EndGame extends GeneralSearchProblem {
 						this.areStonesCollected = true;
 					}
 				}
-				
+				if( (int) newNode.getState().get(0) == this.thanosPos[0] &&
+						(int) newNode.getState().get(1) == this.thanosPos[1] &&
+						!areStonesCollected) {
+					continue;
+				}
 				if( (int) newNode.getState().get(0) == this.thanosPos[0] &&
 						(int) newNode.getState().get(1) == this.thanosPos[1] &&
 						areStonesCollected) {
