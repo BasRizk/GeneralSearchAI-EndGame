@@ -42,6 +42,7 @@ abstract class GeneralSearchProblem {
 		ArrayList<Node> expandedNodes;
 		int depthCounter = 1;
 		int numOfExpandedNodes = 0;
+		boolean areAllNodesExpanded = true;	// used for ID to check whether the search tree has been expanded completely or are there more nodes to expand
 		
 		boolean printedOnce = false;
 
@@ -83,19 +84,21 @@ abstract class GeneralSearchProblem {
 			case "ID":
 				if(currentNode.getDepth() < depthCounter) {
 					expandedNodes = problem.expandNode(currentNode);
-					if(expandedNodes.size() > 0) {
-//						System.out.println("Current Node is not expandable");
-						numOfExpandedNodes++;
-					}
+					numOfExpandedNodes++;
+					
 					for(Node node: expandedNodes) {
 						nodesSearchQueue.addLast(node);
 					}
+					
+				} else {	// There are still more nodes deeper in the tree that are yet to be expanded
+					areAllNodesExpanded = false;
 				}
 				
-				if(nodesSearchQueue.isEmpty()) {
+				if(nodesSearchQueue.isEmpty() && !areAllNodesExpanded) {
 					nodesSearchQueue.addLast(initState);
 					depthCounter++;
 					problem.resetTree();
+					areAllNodesExpanded = true;
 				}
 				break;
 				
