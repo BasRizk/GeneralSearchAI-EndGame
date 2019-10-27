@@ -133,20 +133,23 @@ abstract class GeneralSearchProblem {
 		}
 		
 		if(success) {
-			String plan;
-			String cost;
-			String nodes;
-			System.out.print(currentNode.getPathCost() + ", ");
+			String plan = "";
+			String cost = currentNode.getPathCost() + "";
+			String nodes = numOfExpandedNodes + "";
 			while(true) {
 				if(currentNode == null) {
-					System.out.println("");
 					break;
 				}
-				System.out.print(currentNode.getOperator() + ", ");
+				if(currentNode.getOperator() != null) {
+					plan = currentNode.getOperator() + "," + plan;
+				}
 				currentNode = currentNode.getParentNode();
 			}
-			System.out.println(numOfExpandedNodes);
-			return "plan;cost;node";
+
+			plan = plan.substring(0, plan.length() -1);
+			
+			System.out.println(plan + ";" + cost + ";" + nodes);
+			return plan + ";" + cost + ";" + nodes;
 		}
 		
 		return "Failure";
