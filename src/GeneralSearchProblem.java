@@ -43,9 +43,6 @@ abstract class GeneralSearchProblem {
 		int depthCounter = 1;
 		int numOfExpandedNodes = 0;
 		boolean areAllNodesExpanded = true;	// used for ID to check whether the search tree has been expanded completely or are there more nodes to expand
-		
-		boolean printedOnce = false;
-
 
 		while(true) {
 				
@@ -90,7 +87,9 @@ abstract class GeneralSearchProblem {
 						nodesSearchQueue.addLast(node);
 					}
 					
-				} else {	// There are still more nodes deeper in the tree that are yet to be expanded
+				} else {
+					// There are still more nodes deeper in the tree that
+					// are yet to be expanded
 					areAllNodesExpanded = false;
 				}
 				
@@ -103,10 +102,10 @@ abstract class GeneralSearchProblem {
 				break;
 				
 			case "UC":
-				System.out.println("Expand at level " + currentNode.getDepth());
+//				System.out.println("Expand at level " + currentNode.getDepth());
 				expandedNodes = problem.expandNode(currentNode);
-				System.out.println("Expanded");
-				System.out.println("Num of Expanded Nodes = " + expandedNodes.size());
+//				System.out.println("Expanded");
+//				System.out.println("Num of Expanded Nodes = " + expandedNodes.size());
 				numOfExpandedNodes++;
 				for(Node node : expandedNodes) {
 					ucsSort(nodesSearchQueue, node);
@@ -130,7 +129,7 @@ abstract class GeneralSearchProblem {
 			}
 		
 			if(verbose) {
-				// TODO  Show some effects
+				// TODO  Show some effects BASED ON visualize
 			}
 			
 		}
