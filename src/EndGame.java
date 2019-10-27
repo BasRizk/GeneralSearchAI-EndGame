@@ -353,8 +353,9 @@ public class EndGame extends GeneralSearchProblem {
 //						newNode.printDetails();
 //						System.out.println("bestPastSimilarNodeCost = " + bestPastSimilarNodeCost);
 //						
-						continue;
 					}
+					continue;
+
 				}
 				
 				this.visitedStates.put(newNode.getState(), newNode.getPathCost());				
