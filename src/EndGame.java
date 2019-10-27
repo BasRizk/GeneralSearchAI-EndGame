@@ -7,7 +7,8 @@ public class EndGame extends GeneralSearchProblem {
 	int [] stonesPos;
 	int [] thanosPos;
 	boolean areStonesCollected;
-	ArrayList<ArrayList<Integer>> visitedStates;
+	HashMap<ArrayList<Integer>, Integer> visitedStates;
+//	ArrayList<ArrayList<Integer>> visitedStates;
 	int gridWidth;
 	int gridHeight;
 	int numOfWorriors;
@@ -18,7 +19,7 @@ public class EndGame extends GeneralSearchProblem {
 	int depth;
 	int newValue;
 	boolean isWorriorFound;
-	Node newNode; Integer pastSimilarNodeCost;
+	Node newNode; Integer bestPastSimilarNodeCost;
 	ArrayList<Node> expandedNodes;
 	
 	/**
@@ -58,8 +59,8 @@ public class EndGame extends GeneralSearchProblem {
 		this.thanosPos = thanosPos;
 		this.numOfWorriors = worriorsPos.length / 2;
 		this.areStonesCollected = false;
-		this.visitedStates = new ArrayList<ArrayList<Integer>>();
-		
+//		this.visitedStates = new ArrayList<ArrayList<Integer>>();
+		this.visitedStates = new HashMap<ArrayList<Integer>, Integer>();
 		expandedNodes = new ArrayList<Node>();
 	}
 	
@@ -93,9 +94,10 @@ public class EndGame extends GeneralSearchProblem {
 		return false;
 	}		
 
-	public Node applyOperator(Node node, String operator) {
+	@SuppressWarnings("unchecked")
+	public Node applyOperator(Node parentNode, String operator) {
 		nodeState = new ArrayList<Integer>();		
-		oldState = node.getState();
+		oldState = parentNode.getState();
 		
 		// Initialize node state with the previous state values
 		nodeState = (ArrayList<Integer>)oldState.clone();
@@ -109,8 +111,8 @@ public class EndGame extends GeneralSearchProblem {
 //		System.out.println("--");
 
 
-		cost = node.getPathCost();
-		depth = node.getDepth() + 1;
+		cost = parentNode.getPathCost();
+		depth = parentNode.getDepth() + 1;
 		
 		// TODO is this allowed?
 		if(cost > 100) {
@@ -237,7 +239,7 @@ public class EndGame extends GeneralSearchProblem {
 					}
 				}
 				
-				return new Node(nodeState, node, operator, depth, cost); 
+				return new Node(nodeState, parentNode, operator, depth, cost); 
 			} else {
 				return null;
 			}
@@ -310,7 +312,7 @@ public class EndGame extends GeneralSearchProblem {
 		
 //		System.out.println("Pass");
 
-		return new Node(nodeState, node, operator, depth, cost);
+		return new Node(nodeState, parentNode, operator, depth, cost);
 	}
 	
 	public ArrayList<Node> expandNode(Node node) {
@@ -341,47 +343,60 @@ public class EndGame extends GeneralSearchProblem {
 					continue;
 				}
 				
-					
-//				for(int j = 0; j < newNode.getState().size(); j++)
-//				{
-//					System.out.print(newNode.getState().get(j));
-//				}
-//				System.out.println("");
-					
 				
-				boolean addState = true;
-				for(int j = 0; j < visitedStates.size(); j++) {
-					ArrayList<Integer> oldState = visitedStates.get(j);
-					if(
-							oldState.get(0) == newNode.getState().get(0) &&
-							oldState.get(1) == newNode.getState().get(1) &&
-							oldState.get(2) == newNode.getState().get(2) &&
-							oldState.get(3) == newNode.getState().get(3) &&
-							oldState.get(4) == newNode.getState().get(4) &&
-							oldState.get(5) == newNode.getState().get(5) &&
-							oldState.get(6) == newNode.getState().get(6) &&
-							oldState.get(7) == newNode.getState().get(7) &&
-							oldState.get(8) == newNode.getState().get(8) &&
-							oldState.get(9) == newNode.getState().get(9) &&
-							oldState.get(10) == newNode.getState().get(10) &&
-							oldState.get(11) == newNode.getState().get(11) &&
-							oldState.get(12) == newNode.getState().get(12)
-							)
-					{
-						addState = false;
-						break;
+				// TODO ASURE CHANGE
+				
+				bestPastSimilarNodeCost = this.visitedStates.get(newNode.getState());
+				if(bestPastSimilarNodeCost != null) {
+					if(newNode.getPathCost() - bestPastSimilarNodeCost > -1) {
+//						System.out.println("Repeated State found.");
+//						newNode.printDetails();
+//						System.out.println("bestPastSimilarNodeCost = " + bestPastSimilarNodeCost);
+//						
+						continue;
 					}
-					
 				}
-
 				
-				if(addState) {
-					this.visitedStates.add(newNode.getState());	
-					expandedNodes.add(newNode);
-				}
+				this.visitedStates.put(newNode.getState(), newNode.getPathCost());				
+				expandedNodes.add(newNode);
+				
+//				boolean addState = true;
+//				for(int j = 0; j < visitedStates.size(); j++) {
+//					ArrayList<Integer> oldState = visitedStates.get(j);
+//					if(
+//							oldState.get(0) == newNode.getState().get(0) &&
+//							oldState.get(1) == newNode.getState().get(1) &&
+//							oldState.get(2) == newNode.getState().get(2) &&
+//							oldState.get(3) == newNode.getState().get(3) &&
+//							oldState.get(4) == newNode.getState().get(4) &&
+//							oldState.get(5) == newNode.getState().get(5) &&
+//							oldState.get(6) == newNode.getState().get(6) &&
+//							oldState.get(7) == newNode.getState().get(7) &&
+//							oldState.get(8) == newNode.getState().get(8) &&
+//							oldState.get(9) == newNode.getState().get(9) &&
+//							oldState.get(10) == newNode.getState().get(10) &&
+//							oldState.get(11) == newNode.getState().get(11) &&
+//							oldState.get(12) == newNode.getState().get(12)
+//							)
+//					{
+//						addState = false;
+//						break;
+//					}
+//					
+//				}
+//				
+//				if(addState) {
+//					this.visitedStates.add(newNode.getState());	
+//					expandedNodes.add(newNode);
+//				}
 			}
 		}
 		return expandedNodes;
+	}
+
+	@Override
+	public void resetTree() {
+		this.visitedStates.clear();
 	}
 
 }

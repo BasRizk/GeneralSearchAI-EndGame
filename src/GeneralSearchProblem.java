@@ -9,6 +9,7 @@ abstract class GeneralSearchProblem {
 	
 	public abstract boolean goalTest(Node n);
 	public abstract ArrayList<Node> expandNode(Node n);
+	public abstract void resetTree();
 	
 	public GeneralSearchProblem(Node initialState) {
 		this.initialState = initialState;
@@ -17,6 +18,7 @@ abstract class GeneralSearchProblem {
 	public void setOperators(String [] operators) {
 		this.operators = operators;
 	}
+	
 	public static void ucsSort(LinkedList<Node> nodesSearchQueue, Node node) {
 		    
 		   for(int i = 0; i < nodesSearchQueue.size(); i++) {
@@ -39,83 +41,89 @@ abstract class GeneralSearchProblem {
 		Node currentNode = null;
 		ArrayList<Node> expandedNodes;
 		int depthCounter = 1;
-		int numOfNodes = 0;
+		int numOfExpandedNodes = 0;
+		
+		boolean printedOnce = false;
+
 
 		while(true) {
 				
 			if(nodesSearchQueue.isEmpty()) {
 				success = false;
 				break;
-				//return "Failure";
 			}
 			
-			currentNode = nodesSearchQueue.getLast();
-//			System.out.println(nodesSearchQueue.getLast().getOperator());
-			
+			currentNode = nodesSearchQueue.removeLast();
 			if(problem.goalTest(currentNode)) {
 				success = true;
 				break;
 			}
 			
-			// TODO according to strategy expand the currentNode, and
+			// According to strategy expand the currentNode, and
 			// enqueue the resulted nodes in the according order. 
-			expandedNodes = problem.expandNode(currentNode);
-			numOfNodes++;
-			nodesSearchQueue.removeLast();
 
 			switch(strategy) {
 			
 			case "BF":
+				expandedNodes = problem.expandNode(currentNode);
+				numOfExpandedNodes++;
 				for(Node node : expandedNodes) {
 					nodesSearchQueue.addFirst(node); 
 				}
-				
 				break;
+				
 			case "DF":
+				expandedNodes = problem.expandNode(currentNode);
+				numOfExpandedNodes++;
 				for(Node node : expandedNodes) {
 					nodesSearchQueue.addLast(node); 
 				}
-				
 				break;
+				
 			case "ID":
-				int size = expandedNodes.size();
-				int maxDepth;
-				if(expandedNodes.size() > 0) {
-					maxDepth = (expandedNodes.get(size-1)).getDepth();
-				} else {
-					maxDepth = 0;
-				}
-				depthCounter = 0;
-				while (depthCounter <= maxDepth){
-					depthCounter++;
+				if(currentNode.getDepth() < depthCounter) {
+					expandedNodes = problem.expandNode(currentNode);
+					if(expandedNodes.size() > 0) {
+//						System.out.println("Current Node is not expandable");
+						numOfExpandedNodes++;
+					}
 					for(Node node: expandedNodes) {
-						if(node.getDepth() > depthCounter) {
-							break;
-						}
-						
 						nodesSearchQueue.addLast(node);
 					}
 				}
 				
-//				for(Node node: expandedNodes) {
-//					if(node.getDepth() > depthCounter) {
-//						continue;
-//					}
-//					nodesSearchQueue.addLast(node);
-//				}
-//				if(nodesSearchQueue.isEmpty() && !expandedNodes.isEmpty()) {
-//					nodesSearchQueue.addLast(initState);
-//					depthCounter++;
-//				}
+				if(nodesSearchQueue.isEmpty()) {
+					nodesSearchQueue.addLast(initState);
+					depthCounter++;
+					problem.resetTree();
+				}
+				break;
+				
 			case "UC":
+				System.out.println("Expand at level " + currentNode.getDepth());
+				expandedNodes = problem.expandNode(currentNode);
+				System.out.println("Expanded");
+				System.out.println("Num of Expanded Nodes = " + expandedNodes.size());
+				numOfExpandedNodes++;
 				for(Node node : expandedNodes) {
 					ucsSort(nodesSearchQueue, node);
 				}
+				break;
+				
 			case "GR":
+				expandedNodes = problem.expandNode(currentNode);
+				numOfExpandedNodes++;
+				// TODO
+				break;
 			
 			case "AS":
-			
+				expandedNodes = problem.expandNode(currentNode);
+				numOfExpandedNodes++;
+				// TODO
+				break;
+				
 			default: break;
+			
 			}
 		
 			if(verbose) {
@@ -137,7 +145,7 @@ abstract class GeneralSearchProblem {
 				System.out.print(currentNode.getOperator() + ", ");
 				currentNode = currentNode.getParentNode();
 			}
-			System.out.println(numOfNodes);
+			System.out.println(numOfExpandedNodes);
 			return "plan;cost;node";
 		}
 		

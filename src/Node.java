@@ -31,6 +31,18 @@ public class Node {
 		plan.add(node);
 		return  getPlanRec(plan, node.parentNode);
 	}
+	
+	public void printDetails() {
+		System.out.println("Node Information: ");
+		System.out.println("State: ");
+		for(Integer value : state) {
+			System.out.print(value + ", ");
+		}
+		System.out.println("");
+		System.out.println("Depth: " + depth);
+		System.out.println("PathCost: " + pathCost);
+		System.out.println("Operator: " + operator);
+	}
 
 	public ArrayList<Integer> getState() {
 		return state;

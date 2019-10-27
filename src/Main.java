@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Main {
 
 	/**
@@ -78,11 +80,23 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		long startTime = System.nanoTime();
-		solve("5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3", "ID", false);
-		long endTime   = System.nanoTime();
-		long totalTime = endTime - startTime;
-		System.out.println((double)totalTime/1000000000f);
+		long startTime, endTime, totalTime;
+		String problemDescription, gridSize;
+		
+		gridSize = "100";
+		problemDescription =  gridSize + "," + gridSize +
+				";1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
+		String [] toRunStrategies = new String[]
+						{"DF", "BF", "ID"};
+		
+		for(String strategy : toRunStrategies) {
+			System.out.println("Running " + strategy);
+			startTime = System.nanoTime();
+			solve(problemDescription, strategy, false);
+			endTime   = System.nanoTime();
+			totalTime = endTime - startTime;
+			System.out.println((double)totalTime/1000000000f + "\n");
+		}
 	}
 	
 }
