@@ -21,6 +21,9 @@ abstract class GeneralSearchProblem {
 		this.operators = operators;
 	}
 	
+	public abstract int heuristic1(Node n);
+	public abstract int heuristic2(Node n);
+	
 	public static String search(GeneralSearchProblem problem, String strategy, boolean verbose) {
 		
 		Comparator<Node> nodeCostComparator = null;
@@ -39,8 +42,7 @@ abstract class GeneralSearchProblem {
 				nodeCostComparator = new Comparator<Node>() {
 					@Override
 					public int compare(Node n1, Node n2) {
-						// TODO use Heuristic 1 only
-						return 0;
+						return problem.heuristic1(n1) - problem.heuristic1(n2);
 					}
 		        };
 		        break;
@@ -50,8 +52,7 @@ abstract class GeneralSearchProblem {
 				nodeCostComparator = new Comparator<Node>() {
 					@Override
 					public int compare(Node n1, Node n2) {
-						// TODO use Heuristic 2 only
-						return 0;
+						return problem.heuristic2(n1) - problem.heuristic2(n2);
 					}
 		        };
 		        break;
@@ -60,8 +61,7 @@ abstract class GeneralSearchProblem {
 				nodeCostComparator = new Comparator<Node>() {
 					@Override
 					public int compare(Node n1, Node n2) {
-						// TODO use Heuristic 1 with
-						return n1.getPathCost() - n2.getPathCost();
+						return (problem.heuristic1(n1) + n1.getPathCost()) - (problem.heuristic1(n2) + n2.getPathCost());
 					}
 		        };
 		        break;
@@ -70,8 +70,7 @@ abstract class GeneralSearchProblem {
 				nodeCostComparator = new Comparator<Node>() {
 					@Override
 					public int compare(Node n1, Node n2) {
-						// TODO use Heuristic 2 with
-						return n1.getPathCost() - n2.getPathCost();
+						return (problem.heuristic2(n1) + n1.getPathCost()) - (problem.heuristic2(n2) + n2.getPathCost());
 					}
 		        };
 		        break;

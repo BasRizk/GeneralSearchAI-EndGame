@@ -83,11 +83,11 @@ public class Main {
 		long startTime, endTime, totalTime;
 		String problemDescription, gridSize;
 		
-		gridSize = "100";
+		gridSize = "15";
 		problemDescription =  gridSize + "," + gridSize +
 				";1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
 		String [] toRunStrategies = new String[]
-						{"DF", "BF", "ID", "UC"};
+						{"DF", "BF", "ID", "UC", "GR1", "GR2", "AS1", "AS2"};
 		
 		for(String strategy : toRunStrategies) {
 			System.out.println("Running " + strategy);

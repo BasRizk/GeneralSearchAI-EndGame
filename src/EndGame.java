@@ -27,15 +27,21 @@ public class EndGame extends GeneralSearchProblem {
 	 * problem specifically is the format of the state of its node.
 	 * 
 	 * this class for example relays on the Node class, which is basically
-	 * a generic search tree node, however, as the state of the node is simply
-	 * a generic HashMap <String, ?>, hence, we can have our own format to
-	 * this state second term of the pair to afford our problem state;
+	 * a generic search tree node (ArrayList<Integer>).
 	 * 
-	 * therefore, our EndGame state contains:
+	 * The format of EndGame state will be as follows:
 	 * 
-	 * iX, iY (Location of Iron Man)
-	 * (s1C)ollected, s2C., s3C., s4C., s5C., s6C.,
-	 * (w1K)illed, w2K, w3k, w4k, w5k	
+	 * ----
+	 * At 0,1 - X and Y positions, respectively, of Ironman.
+	 * 
+	 * At i+1, i from 1 to 6, the state of each infinity stone (i),
+	 * where 0 denotes that the stone is not collected,
+	 * and 1 denotes that the stone is collected.
+	 * 
+	 * At i+7, i from 1 to 5 (or more than 5), the state of each warrior (i),
+	 * where 0 denotes that the warrior is not killed,
+	 * and 1 denotes that the warrior is killed.
+	 * ----
 	 * 
 	 * The damage taken by Iron man at a certain node will be represented by 
 	 * the path cost to that node.
@@ -363,6 +369,74 @@ public class EndGame extends GeneralSearchProblem {
 	@Override
 	public void resetTree() {
 		this.visitedStates.clear();
+	}
+	
+	@Override
+	public int heuristic1(Node n) {
+		// Estimate through the number of uncollected stones times the cost of collection
+		ArrayList<Integer> state = n.getState();
+		int numOfUncollectedStones = 0;
+		
+		for(int i = 0; i < 6; i++) {
+			if(state.get(i + 2) == 0) {
+				numOfUncollectedStones++;
+			}
+		}
+		
+		return numOfUncollectedStones * 3;
+	}
+	
+	@Override
+	public int heuristic2(Node n) {
+		// Estimate through trying to be not near warriors and thanos
+		
+		ArrayList<Integer> state = n.getState();
+		int damage = 0;
+		
+		// warriors hits ironman by 1 hp each
+		for(int i = 0; i < this.numOfWorriors; i++) {
+			if(state.get(i + 8) == 0) {
+				if( (this.worriorsPos[i * 2] - state.get(0) == 1) ||
+					(this.worriorsPos[i * 2] - state.get(0) == -1)) {
+					
+					if(this.worriorsPos[(i * 2) + 1] == state.get(1)) {
+						
+						damage++;
+					}
+					
+				} else if(this.worriorsPos[i * 2] == state.get(0)) {
+					
+					if( (this.worriorsPos[(i * 2) + 1] - state.get(1) == 1) || 
+						(this.worriorsPos[(i * 2) + 1] - state.get(1) == -1)) {
+						
+						damage++;	
+					}	
+				}
+			}
+		}
+		
+		// thanos hits ironman by 5 hp
+		if( (this.thanosPos[0] - state.get(0) == 1) || 
+			(this.thanosPos[0] - state.get(0) == -1)) {
+			
+			if(this.thanosPos[1] == state.get(1)) {
+				
+				damage += 5;
+				
+			}
+				
+		} else if(this.thanosPos[0] == state.get(0)) {
+			
+			if( (this.thanosPos[1] - state.get(1) == 1) ||
+				(this.thanosPos[1] - state.get(1) == -1)) {
+				
+				damage += 5;
+				
+			}
+			
+		}
+				
+		return damage;
 	}
 
 }
