@@ -388,55 +388,29 @@ public class EndGame extends GeneralSearchProblem {
 	
 	@Override
 	public int heuristic2(Node n) {
-		// Estimate through trying to be not near warriors and thanos
+		// Minimize number of movement and killing and favor the collect action or being
+		// in thanos' cell
 		
 		ArrayList<Integer> state = n.getState();
-		int damage = 0;
+		int penalty = 0;
 		
-		// warriors hits ironman by 1 hp each
-		for(int i = 0; i < this.numOfWorriors; i++) {
-			if(state.get(i + 8) == 0) {
-				if( (this.worriorsPos[i * 2] - state.get(0) == 1) ||
-					(this.worriorsPos[i * 2] - state.get(0) == -1)) {
-					
-					if(this.worriorsPos[(i * 2) + 1] == state.get(1)) {
-						
-						damage++;
-					}
-					
-				} else if(this.worriorsPos[i * 2] == state.get(0)) {
-					
-					if( (this.worriorsPos[(i * 2) + 1] - state.get(1) == 1) || 
-						(this.worriorsPos[(i * 2) + 1] - state.get(1) == -1)) {
-						
-						damage++;	
-					}	
-				}
-			}
+		if(	this.thanosPos[0] == state.get(0) &&
+			this.thanosPos[1] == state.get(1)) {			
+				return penalty;
 		}
 		
-		// thanos hits ironman by 5 hp
-		if( (this.thanosPos[0] - state.get(0) == 1) || 
-			(this.thanosPos[0] - state.get(0) == -1)) {
-			
-			if(this.thanosPos[1] == state.get(1)) {
-				
-				damage += 5;
-				
-			}
-				
-		} else if(this.thanosPos[0] == state.get(0)) {
-			
-			if( (this.thanosPos[1] - state.get(1) == 1) ||
-				(this.thanosPos[1] - state.get(1) == -1)) {
-				
-				damage += 5;
-				
-			}
-			
+		if(n.getOperator() == "collect") {
+			return penalty;
 		}
-				
-		return damage;
+		else if(n.getOperator() == "kill"){
+			penalty = 5;
+		}
+		else {
+			penalty = 10;
+		}
+		
+		return penalty;
+		
 	}
 
 }
