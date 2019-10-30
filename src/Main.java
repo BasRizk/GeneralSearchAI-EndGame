@@ -49,6 +49,7 @@ public class Main {
 		
 		String [] lines = grid.split(";");
 		String [] line;
+		
 		line = lines[0].split(",");
 		gridWidth = Integer.parseInt(line[0]);
 		gridHeight = Integer.parseInt(line[1]);
@@ -83,20 +84,23 @@ public class Main {
 		long startTime, endTime, totalTime;
 		String problemDescription, gridSize;
 		
-		gridSize = "100";
+		gridSize = "5";
 		problemDescription =  gridSize + "," + gridSize +
 				";1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
 		String [] toRunStrategies = new String[]
-						{"DF", "BF", "ID", "UC"};
+						{"DF"};//, "BF", "ID", "UC"};
 		
+		        
+		       
 		for(String strategy : toRunStrategies) {
 			System.out.println("Running " + strategy);
 			startTime = System.nanoTime();
-			solve(problemDescription, strategy, false);
+			solve(problemDescription, strategy, true);
 			endTime   = System.nanoTime();
 			totalTime = endTime - startTime;
 			System.out.println((double)totalTime/1000000000f + "\n");
 		}
+		
 	}
 	
 }

@@ -189,9 +189,9 @@ abstract class GeneralSearchProblem {
 			
 			}
 		
-			if(verbose) {
+//			if(verbose) {
 				// TODO  Show some effects BASED ON visualize
-			}
+//			}
 			
 		}
 		
@@ -212,11 +212,15 @@ abstract class GeneralSearchProblem {
 			plan = plan.substring(0, plan.length() -1);
 			
 			System.out.println(plan + ";" + cost + ";" + nodes);
+			if(verbose) {
+				problem.visualise(plan);
+			}
 			return plan + ";" + cost + ";" + nodes;
 		}
 		
 		return "Failure";
 		
 	}
+	public abstract void visualise(String plan);
 	
 }
