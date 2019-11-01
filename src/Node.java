@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 
 public class Node {
 
@@ -10,7 +8,7 @@ public class Node {
 	private String operator;
 	private int depth;
 	private int pathCost;
-	
+
 	public Node(ArrayList<Integer> state, Node parentNode, String operator, int depth, int pathCost) {
 		this.state = state;
 		this.parentNode = parentNode;
@@ -18,25 +16,25 @@ public class Node {
 		this.depth = depth;
 		this.pathCost = pathCost;
 	}
-	
+
 	public ArrayList<Node> getPlan() {
 		return getPlanRec(new ArrayList<Node>(), this);
 	}
-	
+
 	private static ArrayList<Node> getPlanRec(ArrayList<Node> plan, Node node) {
-		if(node.parentNode == null) {
+		if (node.parentNode == null) {
 			plan.add(node);
 			return plan;
-		} 
-		
+		}
+
 		plan.add(node);
-		return  getPlanRec(plan, node.parentNode);
+		return getPlanRec(plan, node.parentNode);
 	}
-	
+
 	public void printDetails() {
 		System.out.println("Node Information: ");
 		System.out.println("State: ");
-		for(Integer value : state) {
+		for (Integer value : state) {
 			System.out.print(value + ", ");
 		}
 		System.out.println("");
