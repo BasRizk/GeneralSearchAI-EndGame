@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 public class EndGame extends GeneralSearchProblem {
 	
-	int [] worriorsPos;
+	int [] warriorsPos;
 	int [] stonesPos;
 	int [] thanosPos;
 	boolean areStonesCollected;
@@ -27,15 +27,21 @@ public class EndGame extends GeneralSearchProblem {
 	 * problem specifically is the format of the state of its node.
 	 * 
 	 * this class for example relays on the Node class, which is basically
-	 * a generic search tree node, however, as the state of the node is simply
-	 * a generic HashMap <String, ?>, hence, we can have our own format to
-	 * this state second term of the pair to afford our problem state;
+	 * a generic search tree node (ArrayList<Integer>).
 	 * 
-	 * therefore, our EndGame state contains:
+	 * The format of EndGame state will be as follows:
 	 * 
-	 * iX, iY (Location of Iron Man)
-	 * (s1C)ollected, s2C., s3C., s4C., s5C., s6C.,
-	 * (w1K)illed, w2K, w3k, w4k, w5k	
+	 * ----
+	 * At 0,1 - X and Y positions, respectively, of Ironman.
+	 * 
+	 * At i+1, i from 1 to 6, the state of each infinity stone (i),
+	 * where 0 denotes that the stone is not collected,
+	 * and 1 denotes that the stone is collected.
+	 * 
+	 * At i+7, i from 1 to 5 (or more than 5), the state of each warrior (i),
+	 * where 0 denotes that the warrior is not killed,
+	 * and 1 denotes that the warrior is killed.
+	 * ----
 	 * 
 	 * The damage taken by Iron man at a certain node will be represented by 
 	 * the path cost to that node.
@@ -43,9 +49,9 @@ public class EndGame extends GeneralSearchProblem {
 	 * @param initialState
 	 */
 	public EndGame(int [] ironmanPos, int gridWidth, int gridHeight,
-			int [] worriorsPos, int [] stonesPos, int [] thanosPos) {
+			int [] warriorsPos, int [] stonesPos, int [] thanosPos) {
 		
-		super(createInitialState(ironmanPos, worriorsPos.length / 2));
+		super(createInitialState(ironmanPos, warriorsPos.length / 2));
 		String [] operators = new String []{
 				"up", "down", "left", "right", 
 				"kill", "snap", "collect"};
@@ -53,10 +59,10 @@ public class EndGame extends GeneralSearchProblem {
 		
 		this.gridWidth = gridWidth;
 		this.gridHeight = gridHeight;
-		this.worriorsPos = worriorsPos;
+		this.warriorsPos = warriorsPos;
 		this.stonesPos = stonesPos;
 		this.thanosPos = thanosPos;
-		this.numOfWorriors = worriorsPos.length / 2;
+		this.numOfWorriors = warriorsPos.length / 2;
 		this.areStonesCollected = false;
 		this.visitedStates = new HashMap<ArrayList<Integer>, Integer>();
 		expandedNodes = new ArrayList<Node>();
@@ -125,8 +131,8 @@ public class EndGame extends GeneralSearchProblem {
 			if ( newValue >= 0) {
 				for(int i = 0; i < this.numOfWorriors; i++) {
 					if(nodeState.get(i + 8) == 0) {
-						if( (this.worriorsPos[i * 2] == newValue) &&
-							(this.worriorsPos[(i * 2) + 1] == nodeState.get(1))) {
+						if( (this.warriorsPos[i * 2] == newValue) &&
+							(this.warriorsPos[(i * 2) + 1] == nodeState.get(1))) {
 							return null;
 						}
 					}
@@ -143,8 +149,8 @@ public class EndGame extends GeneralSearchProblem {
 			if ( newValue < gridHeight) {
 				for(int i = 0; i < this.numOfWorriors; i++) {
 					if(nodeState.get(i + 8) == 0) {
-						if( (this.worriorsPos[i * 2] == newValue) &&
-							(this.worriorsPos[(i * 2) + 1] == nodeState.get(1))) {
+						if( (this.warriorsPos[i * 2] == newValue) &&
+							(this.warriorsPos[(i * 2) + 1] == nodeState.get(1))) {
 							return null;
 						}
 					}
@@ -161,8 +167,8 @@ public class EndGame extends GeneralSearchProblem {
 			if ( newValue >= 0) {
 				for(int i = 0; i < this.numOfWorriors; i++) {
 					if(nodeState.get(i + 8) == 0) {
-						if( (this.worriorsPos[i * 2] == nodeState.get(0)) &&
-							(this.worriorsPos[(i * 2) + 1] == newValue)) {
+						if( (this.warriorsPos[i * 2] == nodeState.get(0)) &&
+							(this.warriorsPos[(i * 2) + 1] == newValue)) {
 							return null;
 						}
 					}
@@ -179,8 +185,8 @@ public class EndGame extends GeneralSearchProblem {
 			if ( newValue < gridWidth) {
 				for(int i = 0; i < this.numOfWorriors; i++) {
 					if(nodeState.get(i + 8) == 0) {
-						if( (this.worriorsPos[i * 2] == nodeState.get(0)) &&
-							(this.worriorsPos[(i * 2) + 1] == newValue)) {
+						if( (this.warriorsPos[i * 2] == nodeState.get(0)) &&
+							(this.warriorsPos[(i * 2) + 1] == newValue)) {
 							return null;
 						}
 					}
@@ -197,19 +203,19 @@ public class EndGame extends GeneralSearchProblem {
 			
 			for(int i = 0; i < this.numOfWorriors; i++) {
 				if(nodeState.get(i + 8) == 0) {
-					if( (this.worriorsPos[i * 2] - nodeState.get(0) == 1) ||
-						(this.worriorsPos[i * 2] - nodeState.get(0) == -1)) {
+					if( (this.warriorsPos[i * 2] - nodeState.get(0) == 1) ||
+						(this.warriorsPos[i * 2] - nodeState.get(0) == -1)) {
 						
-						if(this.worriorsPos[(i * 2) + 1] == nodeState.get(1)) {
+						if(this.warriorsPos[(i * 2) + 1] == nodeState.get(1)) {
 							isWorriorFound = true;
 							cost += 2;
 							nodeState.set(i + 8, 1);
 						}
 						
-					} else if(this.worriorsPos[i * 2] == nodeState.get(0)) {
+					} else if(this.warriorsPos[i * 2] == nodeState.get(0)) {
 						
-						if( (this.worriorsPos[(i * 2) + 1] - nodeState.get(1) == 1) || 
-							(this.worriorsPos[(i * 2) + 1] - nodeState.get(1) == -1)) {
+						if( (this.warriorsPos[(i * 2) + 1] - nodeState.get(1) == 1) || 
+							(this.warriorsPos[(i * 2) + 1] - nodeState.get(1) == -1)) {
 							
 							isWorriorFound = true;
 							cost += 2;
@@ -263,18 +269,18 @@ public class EndGame extends GeneralSearchProblem {
 		// warriors hits ironman by 1 hp each
 		for(int i = 0; i < this.numOfWorriors; i++) {
 			if(nodeState.get(i + 8) == 0) {
-				if( (this.worriorsPos[i * 2] - nodeState.get(0) == 1) ||
-					(this.worriorsPos[i * 2] - nodeState.get(0) == -1)) {
+				if( (this.warriorsPos[i * 2] - nodeState.get(0) == 1) ||
+					(this.warriorsPos[i * 2] - nodeState.get(0) == -1)) {
 					
-					if(this.worriorsPos[(i * 2) + 1] == nodeState.get(1)) {
+					if(this.warriorsPos[(i * 2) + 1] == nodeState.get(1)) {
 						
 						cost++;
 					}
 					
-				} else if(this.worriorsPos[i * 2] == nodeState.get(0)) {
+				} else if(this.warriorsPos[i * 2] == nodeState.get(0)) {
 					
-					if( (this.worriorsPos[(i * 2) + 1] - nodeState.get(1) == 1) || 
-						(this.worriorsPos[(i * 2) + 1] - nodeState.get(1) == -1)) {
+					if( (this.warriorsPos[(i * 2) + 1] - nodeState.get(1) == 1) || 
+						(this.warriorsPos[(i * 2) + 1] - nodeState.get(1) == -1)) {
 						
 						cost++;	
 					}	
@@ -363,6 +369,48 @@ public class EndGame extends GeneralSearchProblem {
 	@Override
 	public void resetTree() {
 		this.visitedStates.clear();
+	}
+	
+	@Override
+	public int heuristic1(Node n) {
+		// Estimate through the number of uncollected stones times the cost of collection
+		ArrayList<Integer> state = n.getState();
+		int numOfUncollectedStones = 0;
+		
+		for(int i = 0; i < 6; i++) {
+			if(state.get(i + 2) == 0) {
+				numOfUncollectedStones++;
+			}
+		}
+		
+		return numOfUncollectedStones * 3;
+	}
+	
+	@Override
+	public int heuristic2(Node n) {
+		// Minimize number of movement and killing and favor the collect action or being
+		// in thanos' cell
+		
+		ArrayList<Integer> state = n.getState();
+		int penalty = 0;
+		
+		if(	this.thanosPos[0] == state.get(0) &&
+			this.thanosPos[1] == state.get(1)) {			
+				return penalty;
+		}
+		
+		if(n.getOperator() == "collect") {
+			return penalty;
+		}
+		else if(n.getOperator() == "kill"){
+			penalty = 5;
+		}
+		else {
+			penalty = 10;
+		}
+		
+		return penalty;
+		
 	}
 
 }

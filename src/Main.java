@@ -69,13 +69,11 @@ public class Main {
 		
 		line = lines[4].split(",");
 		for(int i = 0; i < line.length; i ++) {
-//			warriorsPos[i] = Integer.parseInt(line[i]);
 			warriorsPos.add(Integer.parseInt(line[i]));
 		}
-		
+
 		warriorsPosArray = new int [warriorsPos.size()];
 		for(int i = 0; i < line.length; i ++) {
-//			warriorsPos[i] = Integer.parseInt(line[i]);
 			warriorsPosArray[i] = warriorsPos.get(i);
 		}
 		
@@ -89,14 +87,13 @@ public class Main {
 	public static void main(String[] args) {
 		long startTime, endTime, totalTime;
 		String problemDescription, gridSize;
-		
-//		gridSize = "15";
-//		problemDescription =  gridSize + "," + gridSize +
-//				";1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
-		problemDescription = "15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11,10,0";
-		
+
+//		problemDescription = "15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11,10,0";		
+		gridSize = "15";
+		problemDescription =  gridSize + "," + gridSize +
+				";1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
 		String [] toRunStrategies = new String[]
-						{"DF", "BF", "ID", "UC"};
+						{"DF", "BF", "ID", "UC", "GR1", "GR2", "AS1", "AS2"};
 		
 		for(String strategy : toRunStrategies) {
 			System.out.println("Running " + strategy);
