@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
@@ -45,8 +46,8 @@ public class Main {
 		// Parsing Grid Input
 		int gridWidth, gridHeight; int [] ironmanPos; int [] thanosPos;
 		int [] stonesPos = new int[12];
-		int [] warriorsPos = new int[10];
-		
+		ArrayList<Integer> warriorsPos = new ArrayList<Integer>();
+		int [] warriorsPosArray;
 		String [] lines = grid.split(";");
 		String [] line;
 		line = lines[0].split(",");
@@ -68,13 +69,19 @@ public class Main {
 		
 		line = lines[4].split(",");
 		for(int i = 0; i < line.length; i ++) {
-			warriorsPos[i] = Integer.parseInt(line[i]);
+//			warriorsPos[i] = Integer.parseInt(line[i]);
+			warriorsPos.add(Integer.parseInt(line[i]));
 		}
 		
+		warriorsPosArray = new int [warriorsPos.size()];
+		for(int i = 0; i < line.length; i ++) {
+//			warriorsPos[i] = Integer.parseInt(line[i]);
+			warriorsPosArray[i] = warriorsPos.get(i);
+		}
 		
 		// Initializations
 		EndGame endGameProblem = new EndGame(ironmanPos, gridWidth, gridHeight,
-											warriorsPos, stonesPos, thanosPos);
+											warriorsPosArray, stonesPos, thanosPos);
 		
 		return GeneralSearchProblem.search(endGameProblem, strategy, visualize);
 	}
@@ -83,9 +90,11 @@ public class Main {
 		long startTime, endTime, totalTime;
 		String problemDescription, gridSize;
 		
-		gridSize = "100";
-		problemDescription =  gridSize + "," + gridSize +
-				";1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
+//		gridSize = "15";
+//		problemDescription =  gridSize + "," + gridSize +
+//				";1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
+		problemDescription = "15,15;12,13;5,7;7,0,9,14,14,8,5,8,8,9,8,4;6,6,4,3,10,2,7,4,3,11,10,0";
+		
 		String [] toRunStrategies = new String[]
 						{"DF", "BF", "ID", "UC"};
 		
