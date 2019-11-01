@@ -12,6 +12,8 @@ abstract class GeneralSearchProblem {
 	public abstract boolean goalTest(Node n);
 	public abstract ArrayList<Node> expandNode(Node n);
 	public abstract void resetTree();
+	public abstract void visualise(String plan);
+
 	
 	public GeneralSearchProblem(Node initialState) {
 		this.initialState = initialState;
@@ -221,6 +223,6 @@ abstract class GeneralSearchProblem {
 		return "Failure";
 		
 	}
-	public abstract void visualise(String plan);
+	
 	
 }
