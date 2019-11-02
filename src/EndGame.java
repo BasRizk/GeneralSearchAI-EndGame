@@ -112,19 +112,11 @@ public class EndGame extends GeneralSearchProblem {
 
 		// Initialize node state with the previous state values
 		nodeState = (ArrayList<Integer>) oldState.clone();
-
-//		for(int i = 0; i < nodeState.size(); i++) {
-//			System.out.println(nodeState.get(i));
-//		}
-//		System.out.println(operator);
-//		System.out.println(node.getPathCost());
-//		System.out.println(node.getDepth());
-//		System.out.println("--");
+//		nodeState.addAll(oldState);
 
 		cost = parentNode.getPathCost();
 		depth = parentNode.getDepth() + 1;
 
-		// TODO is this allowed?
 		if (cost > 100) {
 			return null;
 		}
@@ -303,19 +295,14 @@ public class EndGame extends GeneralSearchProblem {
 
 		} else if (this.thanosPos[0] == nodeState.get(0)) {
 
-			if ((this.thanosPos[1] - nodeState.get(1) == 1) || (this.thanosPos[1] - nodeState.get(1) == -1)) {
+			if ((this.thanosPos[1] - nodeState.get(1) == 1)
+					|| (this.thanosPos[1] - nodeState.get(1) == -1) 
+					|| (this.thanosPos[1] == nodeState.get(1))) {
 
 				cost += 5;
 
 			}
-
-		} else if (this.thanosPos[0] == nodeState.get(0) && this.thanosPos[1] == nodeState.get(1)) {
-
-			cost += 5;
-
 		}
-
-//		System.out.println("Pass");
 
 		return new Node(nodeState, parentNode, operator, depth, cost);
 	}
@@ -372,7 +359,7 @@ public class EndGame extends GeneralSearchProblem {
 
 	@Override
 	public int heuristic1(Node n) {
-		// Estimate through the number of uncollected stones times the cost of
+		// Estimate through the number of not-collected stones times the cost of
 		// collection
 		ArrayList<Integer> state = n.getState();
 		int numOfUncollectedStones = 0;
@@ -389,7 +376,7 @@ public class EndGame extends GeneralSearchProblem {
 	@Override
 	public int heuristic2(Node n) {
 		// Minimize number of movement and killing and favor the collect action or being
-		// in thanos' cell
+		// in thanos's cell
 
 		ArrayList<Integer> state = n.getState();
 		int penalty = 0;
@@ -492,7 +479,6 @@ public class EndGame extends GeneralSearchProblem {
 			drawGraph(thanos, warriors, stones);
 			System.out.println();
 		}
-
 	}
 
 	public void drawGraph(ArrayList<Integer> thanos, ArrayList<Integer> warriors, ArrayList<Integer> stones) {

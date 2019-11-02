@@ -43,7 +43,7 @@ abstract class GeneralSearchProblem {
 			};
 			break;
 
-		case "GR1": // TODO
+		case "GR1":
 			nodeCostComparator = new Comparator<Node>() {
 				@Override
 				public int compare(Node n1, Node n2) {
@@ -52,7 +52,7 @@ abstract class GeneralSearchProblem {
 			};
 			break;
 
-		case "GR2": // TODO
+		case "GR2":
 			nodeCostComparator = new Comparator<Node>() {
 				@Override
 				public int compare(Node n1, Node n2) {
@@ -180,23 +180,14 @@ abstract class GeneralSearchProblem {
 			case "AS2":
 				// As already priority function is defined at the beginning of the method
 				expandedNodes = problem.expandNode(currentNode);
-//				System.out.println("Expanded at level " + currentNode.getDepth());
-//				System.out.println("Num of Expanded Nodes = " + expandedNodes.size());
 				numOfExpandedNodes++;
-				for (Node node : expandedNodes) {
-					priorityQueue.add(node);
-				}
+				priorityQueue.addAll(expandedNodes);
 				break;
 
 			default:
 				break;
 
 			}
-
-//			if(verbose) {
-			// TODO Show some effects BASED ON visualize
-//			}
-
 		}
 
 		if (success) {
@@ -215,7 +206,7 @@ abstract class GeneralSearchProblem {
 
 			plan = plan.substring(0, plan.length() - 1);
 
-			System.out.println(plan + ";" + cost + ";" + nodes);
+//			System.out.println(plan + ";" + cost + ";" + nodes);
 			if (verbose) {
 				problem.visualise(plan);
 			}

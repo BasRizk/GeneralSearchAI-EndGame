@@ -96,6 +96,7 @@ public class Main {
 		gridSize = "15";
 		problemDescription = gridSize + "," + gridSize + 
 				";1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
+//		problemDescription = "5,5;1,2;3,1;0,2,1,1,2,1,2,2,4,0,4,1;0,3,3,0,3,2,3,4,4,3";
 		String[] toRunStrategies = new String[]
 				{ "DF", "BF", "ID", "UC", "GR1", "GR2", "AS1", "AS2" };
 		boolean visualize = false;
