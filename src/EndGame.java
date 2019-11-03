@@ -371,9 +371,9 @@ public class EndGame extends GeneralSearchProblem {
 		if (n.getOperator() == "collect") {
 			return penalty;
 		} else if (n.getOperator() == "kill") {
-			penalty = 5;
+			penalty = 12;
 		} else {
-			penalty = 10;
+			penalty = 5;
 		}
 
 		return penalty;
