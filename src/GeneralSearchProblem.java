@@ -205,7 +205,7 @@ abstract class GeneralSearchProblem {
 
 			plan = plan.substring(0, plan.length() - 1);
 
-			System.out.println(plan + ";" + cost + ";" + nodes);
+//			System.out.println(plan + ";" + cost + ";" + nodes);
 			if (verbose) {
 				problem.visualise(plan);
 			}

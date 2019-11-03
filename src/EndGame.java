@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class EndGame extends GeneralSearchProblem {
@@ -100,14 +99,9 @@ public class EndGame extends GeneralSearchProblem {
 		int cost;
 		int depth;
 		ArrayList<Integer> nodeState;
-		ArrayList<Integer> oldState;
 		
-		nodeState = new ArrayList<Integer>();
-		oldState = parentNode.getState();
-
-		// Initialize node state with the previous state values
-		nodeState = (ArrayList<Integer>) oldState.clone();
-//		nodeState.addAll(oldState);
+//		 Initialize node state with the previous state values
+		nodeState = (ArrayList<Integer>) parentNode.getState().clone();
 
 		cost = parentNode.getPathCost();
 		depth = parentNode.getDepth() + 1;
